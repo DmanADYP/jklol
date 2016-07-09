@@ -1,0 +1,28 @@
+﻿@model TOProjects.Models.LeadNote
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutII.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LeadNote</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "BackToParent" })
+</p>

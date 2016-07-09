@@ -1,0 +1,151 @@
+﻿@model TOProjects.Models.Lead
+
+
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div style="width: 35%; float:left;">
+    <h4>Lead</h4>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+       <hr />
+ 
+    <dl class="dl-horizontal" >
+        <dt>
+           Created Date
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+          Address
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+      @*  <dt>
+          Send Credit Application
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SendCreditApp)
+        </dd>
+
+        <dt>
+          Customer Insurance Information
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerInsInfo)
+        </dd>*@
+
+        <dt>
+          Bid Due
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BidDueDate)
+        </dd>
+
+        <dt>
+          Bid Opening
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BidOpeningDate)
+        </dd>
+
+        <dt>
+          Follow Up
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FollowUpDate)
+        </dd>
+
+        <dt>
+          Quantity
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+        @*
+        <dt>
+          Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        *@
+       <dt>
+           Customer(s)
+        </dt>
+
+       <dd style="margin-left:20px;"> 
+           @* @Html.DisplayFor(model => model.Customer.Name) *@
+           <br />
+                   @Html.ListBox("CustomerId", (MultiSelectList)ViewBag.Customers, htmlAttributes: new { @style="width:300px;", @disabled = "disabled", @class = "form-control chosenSelect" })
+                   @*@@Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
+               
+           <br />
+        </dd>
+
+        <dt>
+          First Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstName)
+        </dd>
+
+        <dt>
+           Source
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeadSource.Name)
+        </dd>
+
+        <dt>
+          Status
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeadStatu.Name)
+        </dd>
+
+        <dt>
+           Type
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeadType.Name)
+        </dd>
+
+        <dt>
+           Project
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.Name)
+        </dd>
+
+    </dl>
+    
+</div>
+<div style="width:65%; height:750px; float:left;">
+    <iframe id="LeadDetailLeadNotesIFRAME" style="height:750px;width:100%;"src="/LeadNotes/Index"></iframe>
+</div>
+

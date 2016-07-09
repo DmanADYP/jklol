@@ -1,0 +1,201 @@
+﻿@model PagedList.IPagedList<TOProjects.Models.Lead>
+    @using PagedList.Mvc;
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+    @{
+        ViewBag.Title = "Leads";
+    }
+
+    <h2>Leads</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+
+
+
+        <form action="/Leads/Index" method="get">
+    <p>
+        <fieldset>
+            <select id="LeadField" name="LeadField">
+
+                <option selected="selected" value="Address">Address</option>
+                <option value="BidDue">Bid Due</option>
+                <option value="BidOpening">Bid Opening</option>
+                <option value="Created">Created</option>
+               @* <option value="Customer">Customer</option>*@
+               @* <option value="CustomerInsInfo">Customer Insurance Information</option>*@
+                <option value="Employee">Employee</option>
+                <option value="FollowUp">Follow Up</option>
+                <option value="Name">Name</option>
+                <option value="Project">Project</option>
+                <option value="Quantity">Quantity</option>
+               @* <option value="SendCreditApp">Send Credit Application</option>*@
+                <option value="Source">Source</option>
+                <option value="Status">Status</option>
+                <option value="Type">Type</option>
+            </select>
+
+        </fieldset>
+
+        @Html.TextBox("SearchStringValue", null, new { @title = "Enter Value then hit Search", @Id = "FindByValue", @class = "LeadAutoComplete" })
+        @Html.TextBox("SearchStringValue2", null, new { @title = "To Date", @Id = "FindByValue2", @Class = "JQDate", @style = "display:none" })
+
+
+
+
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </p>
+    </form>
+
+    </p>
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th>
+
+                @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.LeadStatusSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+            <th>
+
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+            <th>
+
+                @Html.ActionLink("Address", "Index", new { sortOrder = ViewBag.AddressSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+           @* <th>
+
+                @Html.ActionLink("Send Credit App", "Index", new { sortOrder = ViewBag.SendCreditAppSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+            <th>
+
+                @Html.ActionLink("Customer Ins Info", "Index", new { sortOrder = ViewBag.CustomerInsInfoSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+               *@
+            <th>
+
+                @Html.ActionLink("Created", "Index", new { sortOrder = ViewBag.CreatedDateSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+            <th>
+
+                @Html.ActionLink("Bid Opening", "Index", new { sortOrder = ViewBag.BidOpeningDateSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+            <th>
+
+                @Html.ActionLink("Bid Due", "Index", new { sortOrder = ViewBag.BidDueDateSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+            <th>
+
+                @Html.ActionLink("Follow Up", "Index", new { sortOrder = ViewBag.FollowUpDateSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+            <th>
+
+                @Html.ActionLink("Quantity", "Index", new { sortOrder = ViewBag.QuantitySortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+          @*  <th>
+
+                @Html.ActionLink("Customer", "Index", new { sortOrder = ViewBag.CustomerNameSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>*@
+            <th>
+
+                @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmployeeNameSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+            <th>
+
+                @Html.ActionLink("Source", "Index", new { sortOrder = ViewBag.LeadSourceSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+            <th>
+
+                @Html.ActionLink("Type", "Index", new { sortOrder = ViewBag.LeadTypeSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+            <th>
+
+                @Html.ActionLink("Project", "Index", new { sortOrder = ViewBag.ProjectSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
+            </th>
+
+        </tr>
+
+
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeadStatu.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.SendCreditApp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerInsInfo)
+                </td>
+                    *@
+                <td>
+
+                    @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.CreatedDate))
+                </td>
+                <td>
+
+                    @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.BidOpeningDate))
+
+                </td>
+                <td>
+
+                    @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.BidDueDate))
+                </td>
+
+                <td>
+
+                    @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.FollowUpDate))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Customer.Name)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeadSource.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeadType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

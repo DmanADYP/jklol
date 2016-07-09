@@ -1,0 +1,233 @@
+﻿@model TOProjects.Models.Lead
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post,new { Id = "theLeadCreateForm" })) 
+{
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+        <h4>Lead</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+        
+
+            <div class="form-group">
+            
+            @Html.LabelFor(model => model.LeadStatusId,  "Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    
+                    @Html.DropDownList("LeadStatusId", null, htmlAttributes: new { @class = "form-control",@Id="defaultLeadStatusId" })
+                    @Html.ValidationMessageFor(model => model.LeadStatusId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.LeadSourceId, "Bid Source", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("LeadSourceId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.LeadSourceId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmployeeId, "Employee", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("EmployeeId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group" id="NewProjectDropDown">
+                @Html.LabelFor(model => model.ProjectId, "Project Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">New Project</label>
+                <div class="col-md-10">
+                    <input type="checkbox" id="CreateCustomProjectCheckBox" name="CreateCustomProjectCheckBox" value="Show" style="margin-left:-15px">
+                    <input type="text" style="display:none;width:100%" name="NewProject" id="NewProject" maxlength="30" title="New Project Name ..">
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Address, "Project Address", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @title = "Address" } })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.LeadTypeId, "Project Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("LeadTypeId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.LeadTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Quantity, "Quantity", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @title = "Quantity" } })
+                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+        <div class="form-group" id="ExistingCustomerLeadDropDown">
+            <label class="control-label col-md-2">Customer(s)</label>
+            <div class="col-md-10">
+                @Html.ListBox("CustomerId", (MultiSelectList) ViewBag.Customers, htmlAttributes: new { @class = "form-control chosenSelect", @required ="true"})
+              @*  @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+     
+
+          @* <div class="form-group" id="ExistingCustomerLeadDropDown">
+                @Html.LabelFor(model => model.CustomerId, "Customer", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("CustomerId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+            <div class="form-group">
+                <label class="control-label col-md-2">New Customer</label>
+                <div class="col-md-10">
+                    <input type="checkbox" id="NewCustomerLeadCheckBox" name="NewCustomerLeadCheckBox" value="Show" style="margin-left:-15px">
+                    <input type="text" style="display:none;width:100%" name="NewCustomerLead" id="NewCustomerLead" maxlength="30" title="New Customer Name ..">
+                    <button id="AddNewCustomer">Add</button>
+                </div>
+                
+            </div>
+
+
+        <div id="ContactZone"></div>
+
+        <label class="control-label col-md-2">Lead Contact</label>
+        <input type="button" id="addrow" value="Add Another Lead Contact" />
+        <div id="LeadContacts" style="margin-top:15px;margin-left:50px;" name="leadContactList">
+                <div id="0" class="row" style="float:left;margin-right:20px;margin-bottom:15px;">
+                <input type="hidden" name="leadcontact.Index" value="0" />
+                <input class="form-control" type="text" id="fld1" title="Customer" name="[0].Customer"/>
+                <input  class="form-control" type="text" id="fld2" title="Contact Email" name="[0].ContactEmail"/>
+                <input  class="form-control" type="text" id="fld3" title="Contact First Name" name="[0].ContactFirstname"/>
+                <input class="form-control"  type="text" id="fld4" title="Contact Last Name" name="[0].ContactLastName"/>
+                <input class="form-control"  type="text" id="fld5" title="Contact Mobile" name="[0].ContactMobile"/>
+                <input  class="form-control" type="text" id="fld6" title="Contact Office Phone" name="[0].ContactOfficePhone"/>
+                <button class="remove">Remove</button>
+            </div>
+        </div>
+       
+        <div class="samplerow" style="display:none;">
+            <div class="row" style="float:left;margin-right:20px;margin-bottom:15px;">
+                <input id="222" type="hidden" name="leadcontact.Index" value="xxx" />
+                <input id="333" class="form-control" type="text" id="fld1" title="Customer" />
+                <input id="444" class="form-control" type="text" id="fld2" title="Contact Email"  />
+                <input id="555"class="form-control" type="text" id="fld3" title="Contact First Name"  />
+                <input id="666" class="form-control" type="text" id="fld4" title="Contact Last Name"  />
+                <input id="777" class="form-control" type="text" id="fld5" title="Contact Mobile"  />
+                <input id="888" class="form-control" type="text" id="fld6" title="Contact Office Phone"  />
+                <button class="remove">Remove</button>
+
+            </div>
+        </div>
+
+        @*
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @title = "Name" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            *@
+       
+        <div style="clear:both"></div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreatedDate, "Date Created", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreatedDate, new { htmlAttributes = new { @class = "form-control JQDate" } })
+                    @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BidDueDate, "Bid Due", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BidDueDate, new { htmlAttributes = new { @class = "form-control JQDate" } })
+                    @Html.ValidationMessageFor(model => model.BidDueDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BidOpeningDate, "Bid Open", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BidOpeningDate, new { htmlAttributes = new { @class = "form-control JQDate" } })
+                    @Html.ValidationMessageFor(model => model.BidOpeningDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FollowUpDate, "Follow Up", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FollowUpDate, new { htmlAttributes = new { @class = "form-control JQDate" } })
+                    @Html.ValidationMessageFor(model => model.FollowUpDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+           @* <div class="form-group" style="display:none">
+                @Html.LabelFor(model => model.SendCreditApp, "Send Credit App", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SendCreditApp)
+                        @Html.ValidationMessageFor(model => model.SendCreditApp, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>*@
+
+            @*<div class="form-group" style="display:none">
+                @Html.LabelFor(model => model.CustomerInsInfo, "Customer Ins Info", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CustomerInsInfo, new { htmlAttributes = new { @class = "form-control", @title = "Customer Insurance Information" } })
+                    @Html.ValidationMessageFor(model => model.CustomerInsInfo, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+
+
+
+
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input id="PD" type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+
+    
+       @Scripts.Render("~/bundles/jqueryval")
+}

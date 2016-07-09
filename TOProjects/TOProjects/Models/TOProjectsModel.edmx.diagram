@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8e9b874d65f44f2d987ed27ea4395d52" Name="Diagram1" ZoomLevel="54">
+        <EntityTypeShape EntityType="ProjectsDataModel.Contact" Width="1.5" PointX="1.625" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.CustomerContact" Width="1.5" PointX="3.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.Employee" Width="1.5" PointX="3.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.EmployeeType" Width="1.5" PointX="1.875" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadSource" Width="1.5" PointX="13.125" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadStatu" Width="1.5" PointX="13.125" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadType" Width="1.5" PointX="13.125" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.Project" Width="1.5" PointX="6" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProjectsDataModel.ProjectNote" Width="1.5" PointX="8" PointY="9.25" IsExpanded="true" />
+        <AssociationConnector Association="ProjectsDataModel.FK_CustomerContact_Contact" ManuallyRouted="false" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Employee_EmployeeType" ManuallyRouted="false" />
+        <AssociationConnector Association="ProjectsDataModel.FK_ProjectNote_Project" />
+        <EntityTypeShape EntityType="ProjectsDataModel.Lead" Width="1.5" PointX="10.5" PointY="4.375" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_Employee" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_LeadSource" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_LeadStatus" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_LeadType" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_Project" />
+        <AssociationConnector Association="ProjectsDataModel.FK_Lead_Lead" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadNote" Width="1.5" PointX="13" PointY="9.25" />
+        <AssociationConnector Association="ProjectsDataModel.FK_LeadNote_Lead" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadCustomer" Width="1.5" PointX="7.25" PointY="4" />
+        <AssociationConnector Association="ProjectsDataModel.FK_LeadCustomer_Lead" />
+        <EntityTypeShape EntityType="ProjectsDataModel.Customer" Width="1.5" PointX="8.375" PointY="1.25" />
+        <AssociationConnector Association="ProjectsDataModel.FK_CustomerContact_Customer" />
+        <AssociationConnector Association="ProjectsDataModel.FK_LeadCustomer_Customer" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadContact" Width="1.5" PointX="0.75" PointY="8.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
