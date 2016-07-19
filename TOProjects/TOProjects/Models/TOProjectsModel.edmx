@@ -72,6 +72,7 @@
           <Property Name="BidOpeningDate" Type="datetime" />
           <Property Name="FollowUpDate" Type="datetime" />
           <Property Name="Quantity" Type="varchar" MaxLength="100" />
+          <Property Name="ContactID" Type="int" />
         </EntityType>
         <EntityType Name="LeadContact">
           <Key>
@@ -84,6 +85,15 @@
           <Property Name="ContactLastName" Type="varchar" MaxLength="500" />
           <Property Name="ContactMobile" Type="varchar" MaxLength="500" />
           <Property Name="ContactOfficePhone" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="LeadContactTable">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" />
+          <Property Name="LeadID" Type="int" />
+          <Property Name="ccID" Type="int" />
         </EntityType>
         <EntityType Name="LeadCustomer">
           <Key>
@@ -137,6 +147,44 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectId" Type="int" />
           <Property Name="Note" Type="varchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Projects.dbo.v_lead_contact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="v_lead_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="c_ID" />
+            <PropertyRef Name="cm_ID" />
+            <PropertyRef Name="cc_ID" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="500" />
+          <Property Name="ContactID" Type="int" />
+          <Property Name="CustomerID" Type="int" />
+          <Property Name="LeadSourceId" Type="int" />
+          <Property Name="EmployeeId" Type="int" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="LeadTypeId" Type="int" />
+          <Property Name="LeadStatusId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="Address" Type="varchar" MaxLength="1000" />
+          <Property Name="BidDueDate" Type="datetime" />
+          <Property Name="BidOpeningDate" Type="datetime" />
+          <Property Name="FollowUpDate" Type="datetime" />
+          <Property Name="Quantity" Type="varchar" MaxLength="100" />
+          <Property Name="LeadID" Type="int" />
+          <Property Name="c_ID" Type="int" Nullable="false" />
+          <Property Name="cm_ID" Type="int" Nullable="false" />
+          <Property Name="cc_ID" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="500" />
+          <Property Name="LastName" Type="varchar" MaxLength="500" />
+          <Property Name="WorkPhone" Type="varchar" MaxLength="250" />
+          <Property Name="MobilePhone" Type="varchar" MaxLength="250" />
+          <Property Name="Email" Type="varchar" MaxLength="250" />
+          <Property Name="Title" Type="varchar" MaxLength="500" />
+          <Property Name="Notes" Type="varchar" MaxLength="5000" />
+          <Property Name="CustomerInsuranceInformation" Type="varchar(max)" />
+          <Property Name="SendCreditApplication" Type="bit" />
         </EntityType>
         <Association Name="FK_CustomerContact_Contact">
           <End Role="Contact" Type="Self.Contact" Multiplicity="0..1" />
@@ -246,6 +294,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_LeadContactTable_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="LeadContactTable" Type="Self.LeadContactTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LeadContactTable">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LeadContactTable_Lead">
+          <End Role="Lead" Type="Self.Lead" Multiplicity="0..1" />
+          <End Role="LeadContactTable" Type="Self.LeadContactTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lead">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LeadContactTable">
+              <PropertyRef Name="LeadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_LeadCustomer_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
           <End Role="LeadCustomer" Type="Self.LeadCustomer" Multiplicity="*" />
@@ -302,6 +374,7 @@
           <EntitySet Name="EmployeeType" EntityType="Self.EmployeeType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lead" EntityType="Self.Lead" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LeadContact" EntityType="Self.LeadContact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LeadContactTable" EntityType="Self.LeadContactTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LeadCustomer" EntityType="Self.LeadCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LeadNote" EntityType="Self.LeadNote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LeadSource" EntityType="Self.LeadSource" Schema="dbo" store:Type="Tables" />
@@ -309,6 +382,38 @@
           <EntitySet Name="LeadType" EntityType="Self.LeadType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectNote" EntityType="Self.ProjectNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="v_lead_contact" EntityType="Self.v_lead_contact" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_lead_contact].[Id] AS [Id], 
+    [v_lead_contact].[Name] AS [Name], 
+    [v_lead_contact].[ContactID] AS [ContactID], 
+    [v_lead_contact].[CustomerID] AS [CustomerID], 
+    [v_lead_contact].[LeadSourceId] AS [LeadSourceId], 
+    [v_lead_contact].[EmployeeId] AS [EmployeeId], 
+    [v_lead_contact].[ProjectId] AS [ProjectId], 
+    [v_lead_contact].[LeadTypeId] AS [LeadTypeId], 
+    [v_lead_contact].[LeadStatusId] AS [LeadStatusId], 
+    [v_lead_contact].[CreatedDate] AS [CreatedDate], 
+    [v_lead_contact].[Address] AS [Address], 
+    [v_lead_contact].[BidDueDate] AS [BidDueDate], 
+    [v_lead_contact].[BidOpeningDate] AS [BidOpeningDate], 
+    [v_lead_contact].[FollowUpDate] AS [FollowUpDate], 
+    [v_lead_contact].[Quantity] AS [Quantity], 
+    [v_lead_contact].[LeadID] AS [LeadID], 
+    [v_lead_contact].[c_ID] AS [c_ID], 
+    [v_lead_contact].[cm_ID] AS [cm_ID], 
+    [v_lead_contact].[cc_ID] AS [cc_ID], 
+    [v_lead_contact].[FirstName] AS [FirstName], 
+    [v_lead_contact].[LastName] AS [LastName], 
+    [v_lead_contact].[WorkPhone] AS [WorkPhone], 
+    [v_lead_contact].[MobilePhone] AS [MobilePhone], 
+    [v_lead_contact].[Email] AS [Email], 
+    [v_lead_contact].[Title] AS [Title], 
+    [v_lead_contact].[Notes] AS [Notes], 
+    [v_lead_contact].[CustomerInsuranceInformation] AS [CustomerInsuranceInformation], 
+    [v_lead_contact].[SendCreditApplication] AS [SendCreditApplication]
+    FROM [dbo].[v_lead_contact] AS [v_lead_contact]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_CustomerContact_Contact" Association="Self.FK_CustomerContact_Contact">
             <End Role="Contact" EntitySet="Contact" />
             <End Role="CustomerContact" EntitySet="CustomerContact" />
@@ -344,6 +449,14 @@
           <AssociationSet Name="FK_Lead_Project" Association="Self.FK_Lead_Project">
             <End Role="Project" EntitySet="Project" />
             <End Role="Lead" EntitySet="Lead" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LeadContactTable_Customer" Association="Self.FK_LeadContactTable_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="LeadContactTable" EntitySet="LeadContactTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LeadContactTable_Lead" Association="Self.FK_LeadContactTable_Lead">
+            <End Role="Lead" EntitySet="Lead" />
+            <End Role="LeadContactTable" EntitySet="LeadContactTable" />
           </AssociationSet>
           <AssociationSet Name="FK_LeadCustomer_Customer" Association="Self.FK_LeadCustomer_Customer">
             <End Role="Customer" EntitySet="Customer" />
@@ -547,6 +660,17 @@
             <End Role="LeadCustomer" EntitySet="LeadCustomers" />
           </AssociationSet>
           <EntitySet Name="LeadContacts" EntityType="ProjectsDataModel.LeadContact" />
+          <EntitySet Name="LeadContactTables" EntityType="ProjectsDataModel.LeadContactTable" />
+          <FunctionImport Name="Proc_Lead" ReturnType="Collection(ProjectsDataModel.Proc_Lead_Result)" />
+          <AssociationSet Name="FK_LeadContactTable_Customer" Association="ProjectsDataModel.FK_LeadContactTable_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="LeadContactTable" EntitySet="LeadContactTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LeadContactTable_Lead" Association="ProjectsDataModel.FK_LeadContactTable_Lead">
+            <End Role="Lead" EntitySet="Leads" />
+            <End Role="LeadContactTable" EntitySet="LeadContactTables" />
+          </AssociationSet>
+          <EntitySet Name="v_lead_contact" EntityType="ProjectsDataModel.v_lead_contact" />
         </EntityContainer>
         <Association Name="FK_ProjectNote_Project">
           <End Type="ProjectsDataModel.Project" Role="Project" Multiplicity="0..1" />
@@ -586,6 +710,8 @@
           <NavigationProperty Name="Lead2" Relationship="ProjectsDataModel.FK_Lead_Lead" FromRole="Lead1" ToRole="Lead" />
           <NavigationProperty Name="LeadNotes" Relationship="ProjectsDataModel.FK_LeadNote_Lead" FromRole="Lead" ToRole="LeadNote" />
           <NavigationProperty Name="LeadCustomers" Relationship="ProjectsDataModel.FK_LeadCustomer_Lead" FromRole="Lead" ToRole="LeadCustomer" />
+          <Property Name="ContactID" Type="Int32" />
+          <NavigationProperty Name="LeadContactTables" Relationship="ProjectsDataModel.FK_LeadContactTable_Lead" FromRole="Lead" ToRole="LeadContactTable" />
         </EntityType>
         <Association Name="FK_Lead_Employee">
           <End Type="ProjectsDataModel.Employee" Role="Employee" Multiplicity="0..1" />
@@ -712,6 +838,7 @@
           <Property Name="SendCreditApplication" Type="Boolean" />
           <NavigationProperty Name="CustomerContacts" Relationship="ProjectsDataModel.FK_CustomerContact_Customer" FromRole="Customer" ToRole="CustomerContact" />
           <NavigationProperty Name="LeadCustomers" Relationship="ProjectsDataModel.FK_LeadCustomer_Customer" FromRole="Customer" ToRole="LeadCustomer" />
+          <NavigationProperty Name="LeadContactTables" Relationship="ProjectsDataModel.FK_LeadContactTable_Customer" FromRole="Customer" ToRole="LeadContactTable" />
         </EntityType>
         <Association Name="FK_CustomerContact_Customer">
           <End Type="ProjectsDataModel.Customer" Role="Customer" Multiplicity="0..1" />
@@ -748,6 +875,111 @@
           <Property Name="ContactLastName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="ContactMobile" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="ContactOfficePhone" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="LeadContactTable">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" />
+          <Property Name="LeadID" Type="Int32" />
+          <NavigationProperty Name="Customer" Relationship="ProjectsDataModel.FK_LeadContactTable_Customer" FromRole="LeadContactTable" ToRole="Customer" />
+          <NavigationProperty Name="Lead" Relationship="ProjectsDataModel.FK_LeadContactTable_Lead" FromRole="LeadContactTable" ToRole="Lead" />
+          <Property Name="ccID" Type="Int32" />
+          </EntityType>
+        <ComplexType Name="Proc_Lead_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="LeadSourceId" Nullable="true" />
+          <Property Type="Int32" Name="EmployeeId" Nullable="true" />
+          <Property Type="Int32" Name="ProjectId" Nullable="true" />
+          <Property Type="Int32" Name="LeadTypeId" Nullable="true" />
+          <Property Type="Int32" Name="LeadStatusId" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="1000" />
+          <Property Type="DateTime" Name="BidDueDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="BidOpeningDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="FollowUpDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Quantity" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="ContactID" Nullable="true" />
+          <Property Type="Int32" Name="ContactID1" Nullable="false" />
+          <Property Type="Int32" Name="CustomerID" Nullable="true" />
+          <Property Type="Int32" Name="LeadID" Nullable="true" />
+          <Property Type="Int32" Name="c_ID" Nullable="false" />
+          <Property Type="Int32" Name="cm_ID" Nullable="false" />
+          <Property Type="Int32" Name="cc_ID" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId1" Nullable="true" />
+          <Property Type="Int32" Name="ContactId2" Nullable="true" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="WorkPhone" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="MobilePhone" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="5000" />
+          <Property Type="String" Name="Name1" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CustomerInsuranceInformation" Nullable="true" />
+          <Property Type="Boolean" Name="SendCreditApplication" Nullable="true" />
+        </ComplexType>
+        <Association Name="FK_LeadContactTable_Customer">
+          <End Type="ProjectsDataModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="ProjectsDataModel.LeadContactTable" Role="LeadContactTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LeadContactTable">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LeadContactTable_Lead">
+          <End Type="ProjectsDataModel.Lead" Role="Lead" Multiplicity="0..1" />
+          <End Type="ProjectsDataModel.LeadContactTable" Role="LeadContactTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lead">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LeadContactTable">
+              <PropertyRef Name="LeadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="v_lead_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="c_ID" />
+            <PropertyRef Name="cm_ID" />
+            <PropertyRef Name="cc_ID" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ContactID" Type="Int32" />
+          <Property Name="CustomerID" Type="Int32" />
+          <Property Name="LeadSourceId" Type="Int32" />
+          <Property Name="EmployeeId" Type="Int32" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="LeadTypeId" Type="Int32" />
+          <Property Name="LeadStatusId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="Address" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="BidDueDate" Type="DateTime" Precision="3" />
+          <Property Name="BidOpeningDate" Type="DateTime" Precision="3" />
+          <Property Name="FollowUpDate" Type="DateTime" Precision="3" />
+          <Property Name="Quantity" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LeadID" Type="Int32" />
+          <Property Name="c_ID" Type="Int32" Nullable="false" />
+          <Property Name="cm_ID" Type="Int32" Nullable="false" />
+          <Property Name="cc_ID" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="WorkPhone" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="MobilePhone" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerInsuranceInformation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SendCreditApplication" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -845,6 +1077,7 @@
           <EntitySetMapping Name="Leads">
             <EntityTypeMapping TypeName="ProjectsDataModel.Lead">
               <MappingFragment StoreEntitySet="Lead">
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="FollowUpDate" ColumnName="FollowUpDate" />
@@ -898,6 +1131,50 @@
                 <ScalarProperty Name="ContactFirstName" ColumnName="ContactFirstName" />
                 <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
                 <ScalarProperty Name="Customer" ColumnName="Customer" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LeadContactTables">
+            <EntityTypeMapping TypeName="ProjectsDataModel.LeadContactTable">
+              <MappingFragment StoreEntitySet="LeadContactTable">
+                <ScalarProperty Name="ccID" ColumnName="ccID" />
+                <ScalarProperty Name="LeadID" ColumnName="LeadID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_lead_contact">
+            <EntityTypeMapping TypeName="ProjectsDataModel.v_lead_contact">
+              <MappingFragment StoreEntitySet="v_lead_contact">
+                <ScalarProperty Name="SendCreditApplication" ColumnName="SendCreditApplication" />
+                <ScalarProperty Name="CustomerInsuranceInformation" ColumnName="CustomerInsuranceInformation" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="cc_ID" ColumnName="cc_ID" />
+                <ScalarProperty Name="cm_ID" ColumnName="cm_ID" />
+                <ScalarProperty Name="c_ID" ColumnName="c_ID" />
+                <ScalarProperty Name="LeadID" ColumnName="LeadID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="FollowUpDate" ColumnName="FollowUpDate" />
+                <ScalarProperty Name="BidOpeningDate" ColumnName="BidOpeningDate" />
+                <ScalarProperty Name="BidDueDate" ColumnName="BidDueDate" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LeadStatusId" ColumnName="LeadStatusId" />
+                <ScalarProperty Name="LeadTypeId" ColumnName="LeadTypeId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="LeadSourceId" ColumnName="LeadSourceId" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -212,10 +212,11 @@ $(document).ready(function () {
 
    
 
-
-
+    //This is where it chooses customer, cant tell if something is removed or added, will need to compare 2 arrays to check if its removed. dynamilcy pick out the div and remove it from the page
+    //can google chosen and there are article
+    
     $(".chosenSelect").chosen().change(function () {
-        
+       
         //Get All Currently Selected Customers after change.
         var selectedCustomers = $(".chosenSelect").val();
 
@@ -226,32 +227,57 @@ $(document).ready(function () {
                 previousCustomers.push($(this).attr('id'));
         });
 
-        var currentCustomerID;
+            var currentCustomerID;
+            var clientName = [];
         try {
-            currentCustomerID = $(this).val()[0];
+             
+           
+                $('.search-choice').each(function () {
+                    clientName.push(this.outerText);
+                    //clientName.push(this.value);
+            });
+                
+            //currentCustomerID = $(this).val()[0];
+                currentCustomerID = clientName[clientName.length - 1];
+            $(this).each( function (i, l) {
+              //  alert(this.val());
+            });
         } catch (e) {
-            currentCustomerID = $(this).val();
+           // currentCustomerID = $(this).val();
+            currentCustomerID = clientName[clientName.length - 1];
         }
       
         //COMPARE: selectedCustomers vs. previousCustomers.  If selected contains new add it.  If selected has one less remove it.
         //Pass this result into AJAX if add (not what is currently passed).  If remove then no ajax and just jquery to remove div).
-
-
+      
+        $('.search-choice-close').click(function (e) {
+           
+            $(this.parentElement.childNodes).each(function () {
+                alert(this.innerText);
+                $('#' + this.innerText).remove();
+             
+            });
+           
+        });
 
         //Set this ...
         var yesORno = true;
+        if ($('#' + currentCustomerID).length) {
+           
+        } else {
 
-        $.ajax({
-            url: "/Leads/ShowContacts",
-            type: "POST",
-            dataType: "json",
-            data: { addItem: yesORno, theCustomerID: currentCustomerID },
-            success: function (data) {
-                $("#ContactZone").append(data);
-            }
-        });
+            $.ajax({
+                url: "/Leads/ShowContacts",
+                type: "POST",
+                dataType: "json",
+                data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                success: function (data) {
+                    $("#ContactZone").append(data);
+                }
+            });
+        }
 
-
+        
     });
 
     $('.JQDate').appendDtpicker({

@@ -19,6 +19,7 @@ namespace TOProjects.Models
         {
             this.CustomerContacts = new HashSet<CustomerContact>();
             this.LeadCustomers = new HashSet<LeadCustomer>();
+            this.LeadContactTables = new HashSet<LeadContactTable>();
         }
     
         public int Id { get; set; }
@@ -30,5 +31,7 @@ namespace TOProjects.Models
         public virtual ICollection<CustomerContact> CustomerContacts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LeadCustomer> LeadCustomers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LeadContactTable> LeadContactTables { get; set; }
     }
 }

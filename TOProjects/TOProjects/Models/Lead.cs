@@ -19,6 +19,7 @@ namespace TOProjects.Models
         {
             this.LeadNotes = new HashSet<LeadNote>();
             this.LeadCustomers = new HashSet<LeadCustomer>();
+            this.LeadContactTables = new HashSet<LeadContactTable>();
         }
     
         public int Id { get; set; }
@@ -34,6 +35,7 @@ namespace TOProjects.Models
         public Nullable<System.DateTime> FollowUpDate { get; set; }
         public string Quantity { get; set; }
         public string Name { get; set; }
+        public Nullable<int> ContactID { get; set; }
     
         public virtual Employee Employee { get; set; }
         public virtual LeadSource LeadSource { get; set; }
@@ -46,5 +48,7 @@ namespace TOProjects.Models
         public virtual ICollection<LeadNote> LeadNotes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LeadCustomer> LeadCustomers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LeadContactTable> LeadContactTables { get; set; }
     }
 }

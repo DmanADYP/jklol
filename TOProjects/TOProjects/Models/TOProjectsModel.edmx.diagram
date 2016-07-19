@@ -32,6 +32,12 @@
         <AssociationConnector Association="ProjectsDataModel.FK_CustomerContact_Customer" />
         <AssociationConnector Association="ProjectsDataModel.FK_LeadCustomer_Customer" />
         <EntityTypeShape EntityType="ProjectsDataModel.LeadContact" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadContactTable" Width="1.5" PointX="12.5" PointY="11.125" />
+        <EntityTypeShape EntityType="ProjectsDataModel.LeadContactTableModel" Width="1.5" PointX="15.625" PointY="7.25" />
+        <InheritanceConnector EntityType="ProjectsDataModel.LeadContactTableModel" />
+        <AssociationConnector Association="ProjectsDataModel.FK_LeadContactTable_Customer" />
+        <AssociationConnector Association="ProjectsDataModel.FK_LeadContactTable_Lead" />
+        <EntityTypeShape EntityType="ProjectsDataModel.v_lead_contact" Width="1.5" PointX="0.75" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

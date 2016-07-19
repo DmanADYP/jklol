@@ -1,5 +1,5 @@
 ﻿@model TOProjects.Models.Lead
-
+@*@model TOProjects.ViewModel.ToprojectsViewModel*@
 @{
     ViewBag.Title = "Create";
 }
@@ -7,9 +7,10 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm(null, null, FormMethod.Post,new { Id = "theLeadCreateForm" })) 
+@using (Html.BeginForm("Create", "Leads", FormMethod.Post,new { Id = "theLeadCreateForm" })) 
 {
                 @Html.AntiForgeryToken()
+                
 
                 <div class="form-horizontal">
         <h4>Lead</h4>
@@ -17,16 +18,21 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
-
-        
+                   
+            
 
             <div class="form-group">
             
             @Html.LabelFor(model => model.LeadStatusId,  "Status", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    
-                    @Html.DropDownList("LeadStatusId", null, htmlAttributes: new { @class = "form-control",@Id="defaultLeadStatusId" })
+                   
+                   @* @Html.DropDownList("LeadStatusId", null, htmlAttributes: new { @class = "form-control",@Id="defaultLeadStatusId" })*@
+                    @Html.DropDownList("LeadStatusId", null, htmlAttributes: new { @class = "form-control", @Id = "defaultLeadStatusId" })
                     @Html.ValidationMessageFor(model => model.LeadStatusId, "", new { @class = "text-danger" })
+                    @*@Html.DropDownListFor(x => x.lcm.LeadStatusId, Model.StatusList)*@
+                   
+                  
+
                 </div>
             </div>
             <div class="form-group">
@@ -89,11 +95,15 @@
         <div class="form-group" id="ExistingCustomerLeadDropDown">
             <label class="control-label col-md-2">Customer(s)</label>
             <div class="col-md-10">
-                @Html.ListBox("CustomerId", (MultiSelectList) ViewBag.Customers, htmlAttributes: new { @class = "form-control chosenSelect", @required ="true"})
+           
+                @Html.ListBox("CustomerId", (MultiSelectList) 
+               ViewBag.Customers, htmlAttributes: 
+               new { @class = "form-control chosenSelect", @required ="true"})
               @*  @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
             </div>
         </div>
-     
+
+
 
           @* <div class="form-group" id="ExistingCustomerLeadDropDown">
                 @Html.LabelFor(model => model.CustomerId, "Customer", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -116,20 +126,7 @@
 
         <div id="ContactZone"></div>
 
-        <label class="control-label col-md-2">Lead Contact</label>
-        <input type="button" id="addrow" value="Add Another Lead Contact" />
-        <div id="LeadContacts" style="margin-top:15px;margin-left:50px;" name="leadContactList">
-                <div id="0" class="row" style="float:left;margin-right:20px;margin-bottom:15px;">
-                <input type="hidden" name="leadcontact.Index" value="0" />
-                <input class="form-control" type="text" id="fld1" title="Customer" name="[0].Customer"/>
-                <input  class="form-control" type="text" id="fld2" title="Contact Email" name="[0].ContactEmail"/>
-                <input  class="form-control" type="text" id="fld3" title="Contact First Name" name="[0].ContactFirstname"/>
-                <input class="form-control"  type="text" id="fld4" title="Contact Last Name" name="[0].ContactLastName"/>
-                <input class="form-control"  type="text" id="fld5" title="Contact Mobile" name="[0].ContactMobile"/>
-                <input  class="form-control" type="text" id="fld6" title="Contact Office Phone" name="[0].ContactOfficePhone"/>
-                <button class="remove">Remove</button>
-            </div>
-        </div>
+       
        
         <div class="samplerow" style="display:none;">
             <div class="row" style="float:left;margin-right:20px;margin-bottom:15px;">

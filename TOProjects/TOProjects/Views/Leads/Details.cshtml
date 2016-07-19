@@ -1,4 +1,5 @@
-﻿@model TOProjects.Models.Lead
+﻿@*@model TOProjects.Models.Lead*@
+@model TOProjects.ViewModel.ToprojectsViewModel
 
 
 
@@ -11,7 +12,7 @@
 <div style="width: 35%; float:left;">
     <h4>Lead</h4>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ld.Id }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
        <hr />
@@ -22,7 +23,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CreatedDate)
+            @Html.DisplayFor(model => model.ld.CreatedDate)
         </dd>
 
         <dt>
@@ -30,7 +31,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Address)
+            @Html.DisplayFor(model => model.ld.Address)
         </dd>
 
       @*  <dt>
@@ -54,7 +55,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BidDueDate)
+            @Html.DisplayFor(model => model.ld.BidDueDate)
         </dd>
 
         <dt>
@@ -62,7 +63,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BidOpeningDate)
+            @Html.DisplayFor(model => model.ld.BidOpeningDate)
         </dd>
 
         <dt>
@@ -70,7 +71,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.FollowUpDate)
+            @Html.DisplayFor(model => model.ld.FollowUpDate)
         </dd>
 
         <dt>
@@ -78,7 +79,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Quantity)
+            @Html.DisplayFor(model => model.ld.Quantity)
         </dd>
         @*
         <dt>
@@ -96,7 +97,35 @@
        <dd style="margin-left:20px;"> 
            @* @Html.DisplayFor(model => model.Customer.Name) *@
            <br />
-                   @Html.ListBox("CustomerId", (MultiSelectList)ViewBag.Customers, htmlAttributes: new { @style="width:300px;", @disabled = "disabled", @class = "form-control chosenSelect" })
+
+    @*@foreach (var item in Model.lvc)
+    {
+        
+        <table>
+            <tr>
+                <th> First Name: </th>
+                <td>@item.FirstName</td>
+            </tr>
+            <tr>
+                <th> Last Name </th>
+                <th> Email </th>
+                <th> Work Phone </th>
+                <th> Mobile Phone </th>
+                <th> Title </th>
+                <th> Notes </th>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td>@item.LastName</td>
+                <td>@item.Email</td>
+                <td>@item.WorkPhone</td>
+                <td>@item.Title</td>
+                <td>@item.Notes</td>
+            </tr>
+        </table>
+    }*@
+              @*     @Html.ListBox("CustomerId", (MultiSelectList)ViewBag.Customers, htmlAttributes: new { @style="width:300px;", @disabled = "disabled", @class = "form-control chosenSelect" })*@
                    @*@@Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
                
            <br />
@@ -107,7 +136,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Employee.FirstName)
+            @Html.DisplayFor(model => model.ld.Employee.FirstName)
         </dd>
 
         <dt>
@@ -115,7 +144,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.LeadSource.Name)
+            @Html.DisplayFor(model => model.ld.LeadSource.Name)
         </dd>
 
         <dt>
@@ -123,7 +152,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.LeadStatu.Name)
+            @Html.DisplayFor(model => model.ld.LeadStatu.Name)
         </dd>
 
         <dt>
@@ -131,7 +160,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.LeadType.Name)
+            @Html.DisplayFor(model => model.ld.LeadType.Name)
         </dd>
 
         <dt>
@@ -139,7 +168,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Project.Name)
+            @Html.DisplayFor(model => model.ld.Project.Name)
         </dd>
 
     </dl>

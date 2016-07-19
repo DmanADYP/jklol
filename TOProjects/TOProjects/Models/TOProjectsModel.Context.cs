@@ -12,6 +12,8 @@ namespace TOProjects.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class ProjectsEntities : DbContext
     {
@@ -39,5 +41,12 @@ namespace TOProjects.Models
         public virtual DbSet<LeadCustomer> LeadCustomers { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<LeadContact> LeadContacts { get; set; }
+        public virtual DbSet<LeadContactTable> LeadContactTables { get; set; }
+        public virtual DbSet<v_lead_contact> v_lead_contact { get; set; }
+    
+        public virtual ObjectResult<Proc_Lead_Result> Proc_Lead()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Proc_Lead_Result>("Proc_Lead");
+        }
     }
 }
