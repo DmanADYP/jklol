@@ -456,17 +456,6 @@ namespace TOProjects.Controllers
                ContactL = new List<int>();
             }
 
-           
-
-            if (NameContact != null)
-            {
-                for (int i = 0; i < NameContact.Length; i++)
-                {
-                    string name = NameContact[i];
-                    ContactL.Add(db.Customers.Where(c => c.Name == name).Select(c => c.Id).FirstOrDefault());
-                }
-            }
-            //Create New Project If Requested and use it's id for lead.ProjectId
             if (!string.IsNullOrEmpty(CreateCustomProjectCheckBox) && CreateCustomProjectCheckBox == "Show")
             {
                 string y = NewProject;
@@ -477,8 +466,20 @@ namespace TOProjects.Controllers
                 Project Afterproject = db2.Projects.Add(project);
                 db2.SaveChanges();
                 lead.ProjectId = Afterproject.Id;
+                db2.SaveChanges();
             }
 
+
+            if (NameContact != null)
+            {
+                for (int i = 0; i < NameContact.Length; i++)
+                {
+                    string name = NameContact[i];
+                    ContactL.Add(db.Customers.Where(c => c.Name == name).Select(c => c.Id).FirstOrDefault());
+                }
+            }
+            //Create New Project If Requested and use it's id for lead.ProjectId
+           
 
             var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
 
