@@ -11,7 +11,20 @@ function getParameterByName(name) {
 }
 
 
+$(window).load(function () {
 
+    $('.search-choice-close').click(function (e) {
+       
+        $(this.parentElement.childNodes).each(function () {
+            //alert(('#' + currentCustomerID));
+            //$('#' + currentCustomerID).remove();
+            $('#' + this.innerText).remove();
+
+        });
+
+    });
+
+});
 
 $(document).ready(function () {
     //$('.JQDate').datepicker(); //Date Only
@@ -249,11 +262,13 @@ $(document).ready(function () {
       
         //COMPARE: selectedCustomers vs. previousCustomers.  If selected contains new add it.  If selected has one less remove it.
         //Pass this result into AJAX if add (not what is currently passed).  If remove then no ajax and just jquery to remove div).
-      
+        
         $('.search-choice-close').click(function (e) {
-           
-            $(this.parentElement.childNodes).each(function () {
-                alert(this.innerText);
+            
+          
+             $(this.parentElement.childNodes).each(function () {
+            //alert(('#' + currentCustomerID));
+            //$('#' + currentCustomerID).remove();
                 $('#' + this.innerText).remove();
              
             });

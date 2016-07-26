@@ -227,6 +227,7 @@
     <Compile Include="Models\EmployeeType.cs">
       <DependentUpon>TOProjectsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Except.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Lead.cs">
       <DependentUpon>TOProjectsModel.tt</DependentUpon>

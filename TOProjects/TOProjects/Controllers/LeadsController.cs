@@ -15,6 +15,7 @@ namespace TOProjects.Controllers
 {
     public class LeadsController : Controller
     {
+       
         private ProjectsEntities db = new ProjectsEntities();
         HelperClass hc = new HelperClass();
 
@@ -24,7 +25,7 @@ namespace TOProjects.Controllers
         {
             
             //customer ID is coming into here
-            string result = hc.GenerateContact(addItem, theCustomerID, 0);
+            string result = hc.GenerateContact(addItem, theCustomerID, 0,"Create");
             return Json(result, JsonRequestBehavior.AllowGet);
             //            return Json("", JsonRequestBehavior.AllowGet);
         }
@@ -441,12 +442,30 @@ namespace TOProjects.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Lead lead, int[] Contact, int[] cc_id
-            //,[Bind(Include = "Id,LeadSourceId,EmployeeId,ProjectId,LeadTypeId,LeadStatusId,CreatedDate,Address,SendCreditApp,CustomerInsInfo,BidDueDate,BidOpeningDate,FollowUpDate,Quantity,Name")] Lead lead
+        public ActionResult Create(Lead lead, int[] Contact, string[] cc_id, string[] NameContact
+                 //,[Bind(Include = "Id,LeadSourceId,EmployeeId,ProjectId,LeadTypeId,LeadStatusId,CreatedDate,Address,SendCreditApp,CustomerInsInfo,BidDueDate,BidOpeningDate,FollowUpDate,Quantity,Name")] Lead lead
                  , string NewProject, string CreateCustomProjectCheckBox, string NewCustomerLeadCheckBox, string NewCustomerLead, List<LeadContact> leadContactList, int[] CustomerId)
         {
-          
+            var ContactL = new List<int>();
+            if (Contact !=null)
+            {
+               ContactL = Contact.ToList();
+            }
+            else
+            {
+               ContactL = new List<int>();
+            }
 
+           
+
+            if (NameContact != null)
+            {
+                for (int i = 0; i < NameContact.Length; i++)
+                {
+                    string name = NameContact[i];
+                    ContactL.Add(db.Customers.Where(c => c.Name == name).Select(c => c.Id).FirstOrDefault());
+                }
+            }
             //Create New Project If Requested and use it's id for lead.ProjectId
             if (!string.IsNullOrEmpty(CreateCustomProjectCheckBox) && CreateCustomProjectCheckBox == "Show")
             {
@@ -461,13 +480,18 @@ namespace TOProjects.Controllers
             }
 
 
+            var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
+
+            ViewBag.Customers = new MultiSelectList(Customers.OrderBy(c => c.CustomerName), "CustomerID", "CustomerName");
             var errors = ModelState
             .Where(x => x.Value.Errors.Count > 0)
             .Select(x => new { x.Key, x.Value.Errors })
             .ToArray();
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
+
+               
                 //We create the new lead
                 Lead AfterLead = db.Leads.Add(lead);
 
@@ -491,54 +515,29 @@ namespace TOProjects.Controllers
 
 
 
-                }
+                //}
 
                 if (CustomerId != null)
                 {
                     //Create entries for all customers chosen on the lead create screen
                     foreach (int theInt in CustomerId)
                     {
-                        LeadCustomer lc = new LeadCustomer();
-                        lc.LeadId = AfterLead.Id;
-                        lc.CustomerId = theInt;
-                        db.LeadCustomers.Add(lc);
+                        LeadCustomer lcd = new LeadCustomer();
+                        lcd.LeadId = AfterLead.Id;
+                        lcd.CustomerId = theInt;
+                        db.LeadCustomers.Add(lcd);
                     }
                 }
 
-               db.SaveChanges();
-                //add customer contact table 
-                int id = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
-                for (int ii = 0; ii < Contact.Length; ii++)
-                {
-                    int nameid = Contact[ii];
-
-                    for (int i = 0; i < cc_id.Length; i++)
-                {
-                    int ccid = cc_id[i];
-                        int? cc = db.CustomerContacts.Where(c => c.CustomerId == nameid && c.ContactId == ccid).Select(c =>
-                             c.ContactId
-                               ).FirstOrDefault();
-                        if (cc != null)
-                        {
-                            db.LeadContactTables.Add(new LeadContactTable
-                            {
-
-                                CustomerID = nameid,
-                                LeadID = id,
-                                ccID = cc
-                            });
-
-
-                        }
-
-
-                    }
-                }
                 db.SaveChanges();
+
+                hc.AddNewContact(ContactL.ToArray(), cc_id);
+
+                //hc.AddContacts(Contact, cc_id, lead, CustomerId);
 
                 return RedirectToAction("Index");
             }
-            
+
 
             // ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", lead.CustomerId);
             ViewBag.EmployeeId = new SelectList(db.Employees, "Id", "FirstName", lead.EmployeeId);
@@ -546,8 +545,12 @@ namespace TOProjects.Controllers
             ViewBag.LeadStatusId = new SelectList(db.LeadStatus, "Id", "Name", lead.LeadStatusId);
             ViewBag.LeadTypeId = new SelectList(db.LeadTypes, "Id", "Name", lead.LeadTypeId);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", lead.ProjectId);
+
+            return RedirectToAction("Index");
             return View(lead);
         }
+
+       
 
         // GET: Leads/Edit/5
         public ActionResult Edit(int? id)
@@ -564,15 +567,21 @@ namespace TOProjects.Controllers
             }
 
             
-            var CustomerIDs = db.LeadCustomers.Where(lc => lc.LeadId == id).Select(lcr => new { CustomerID = lcr.CustomerId });
+            var CustomerIDs = db.Customers.Where(lc => lc.Id == id).Select(lcr => new { CustomerID = lcr.Id });
             var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
 
-            var CustomersSelected = db.v_lead_contact.Where(c => c.Id == id).Select(c => c.CustomerID).Distinct().ToArray();
+            var CustomersSelected = db.LeadContactTables.Where(c => c.LeadID == id).Select(c => c.CustomerID).Distinct().ToArray();
             //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
 
             ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName",CustomersSelected);
 
-            var customerSelectedName = db.v_lead_contact.Where(c => c.Id == id).Select(c => c.Name).Distinct();
+            var customerSelectedName = (from lc in db.LeadContactTables
+                                        join c in db.Customers on lc.CustomerID equals c.Id
+                                        where lc.LeadID == id
+                                        select c.Name).Distinct();
+                                     
+                
+                //db.v_lead_contact.Where(c => c.Id == id).Select(c => c.Name).Distinct();
 
             // ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", lead.CustomerId);
             ViewBag.EmployeeId = new SelectList(db.Employees, "Id", "FirstName", lead.EmployeeId);
@@ -586,11 +595,11 @@ namespace TOProjects.Controllers
                 int iid = Convert.ToInt32(id);
                 if (item == null)
                 {
-                    sb.Append(hc.GenerateContact("true", "",iid));
+                    sb.Append(hc.GenerateContact("true", "",iid, "Edit"));
                 }
                 else
                 {
-                    sb.Append(hc.GenerateContact("true", item.ToString(),iid));
+                    sb.Append(hc.GenerateContact("true", item.ToString(),iid,"Edit"));
                 }
                
             }
@@ -605,162 +614,121 @@ namespace TOProjects.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int[] Contact,int[] cc_id,
-            //[Bind(Include = "Id,LeadSourceId,EmployeeId,ProjectId,LeadTypeId,LeadStatusId,CreatedDate,Address,SendCreditApp,CustomerInsInfo,BidDueDate,BidOpeningDate,FollowUpDate,Quantity,Name")]
+        public ActionResult Edit(int[] Contact, string[] cc_id,string[] NameContact,
+        //[Bind(Include = "Id,LeadSourceId,EmployeeId,ProjectId,LeadTypeId,LeadStatusId,CreatedDate,Address,SendCreditApp,CustomerInsInfo,BidDueDate,BidOpeningDate,FollowUpDate,Quantity,Name")]
         Lead lead, int[] CustomerId)
         {
+            var ContactL = new List<int>();
             if (Contact != null)
             {
-                foreach (var item in Contact)
-                {
-                    //check if value exist
-                    int iid = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
-                    int? checkID = db.LeadContactTables.Where(c => c.CustomerID == item && c.LeadID == iid).Select(c => c.CustomerID).FirstOrDefault();
-                    //add if value doesnt exits
-                    if (checkID == null)
-                    {
-                        //Create entries for all customers chosen on the lead create screen
-                        
-                        for (int i = 0; i < Contact.Length; i++)
-                        {
-                            int? ccid;
-                            for (int Ii = 0; Ii < cc_id.Length; Ii++)
-                            {
-                                ccid = cc_id[Ii];
-                           
-                            
-                          
-                            int nameid = Contact[i];
-
-
-                            db.LeadContactTables.Add(new LeadContactTable
-                            {
-
-                                CustomerID = nameid,
-                                LeadID = iid,
-                                ccID = ccid
-                            });
-                        }
-                        }
-                        db.SaveChanges();
-
-                    }
-                }
-               
-
-               
-            }
-            //check if any contact is checked 
-            if ( Contact !=null) {
-                //get all unchecked contacts and remove from LeadContact Table
-         var equal =   Contact.ToList();
-         var dnequal = CustomerId.ToList();
-                if (cc_id !=null)
-                {
-                    var checkEquals = cc_id.ToList();
-                    List<int> checkdnEquals = new List<int>();
-                    foreach (var item in equal)
-                    {
-                        
-                        checkEquals.Add(db.v_lead_contact.Where(c => c.CustomerID == item && c.LeadID == lead.Id).Select(c => c.cc_ID).FirstOrDefault());
-                        var subUnchecked = checkEquals.Except(checkdnEquals);
-                        var some = db.LeadContactTables.Where(x => x.LeadID == lead.Id && x.CustomerID == item).ToList();
-                        foreach (var unitem in subUnchecked)
-                        {
-                            some.ForEach(a => a.ccID = unitem);
-                        }
-                        
-
-                        db.SaveChanges();
-                    }
-                }
-                else
-                {
-                    var some = db.LeadContactTables.Where(x =>  x.LeadID == lead.Id).ToList();
-                    some.ForEach(a => a.ccID = null);
-                    db.SaveChanges();
-                }
-               
-            
-        
-            var allCustomersForThisLeadId = from c in db.LeadCustomers where c.LeadId == lead.Id select c;
-            db.LeadCustomers.RemoveRange(allCustomersForThisLeadId);
-            db.SaveChanges();
-
-            var UncheckedContacts = dnequal.Except(equal);
-            foreach (var item in UncheckedContacts)
-            {
-                    List<int> ld = db.LeadContactTables.Where(c => c.LeadID == lead.Id && c.CustomerID == item).Select(c => c.ContactID).ToList();
-                    foreach (var itemld in ld)
-                    {
-                        LeadContactTable customer = new LeadContactTable() { ContactID = itemld };
-                        db.LeadContactTables.Attach(customer);
-                        db.LeadContactTables.Remove(customer);
-                        db.SaveChanges();
-                    }
-               
-                }
-               
+                ContactL = Contact.ToList();
             }
             else
             {
-                List<int> ld = db.LeadContactTables.Where(c => c.LeadID == lead.Id).Select(c => c.ContactID).ToList();
-                foreach (var item in ld)
+                ContactL = new List<int>();
+            }
+
+            int iid = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
+            List<Except> aList = new List<Except>();
+            List<Except> bList = new List<Except>();
+            if (NameContact != null)
+            {
+                for (int i = 0; i < NameContact.Length; i++)
                 {
-                    LeadContactTable customer = new LeadContactTable() { ContactID = item };
-                    db.LeadContactTables.Attach(customer);
-                    db.LeadContactTables.Remove(customer);
+                    string name = NameContact[i];
+                    ContactL.Add(db.Customers.Where(c => c.Name == name).Select(c => c.Id).FirstOrDefault());
+                }
+            }
+            if (ContactL !=null)
+            {
+
+            foreach (var item in ContactL)
+            {
+                int? a = db.LeadContactTables.Where(c => c.LeadID == iid && c.CustomerID == item).Select(c => c.CustomerID).FirstOrDefault();
+                int? b = db.LeadContactTables.Where(c => c.LeadID == iid && c.CustomerID == item).Select(c => c.LeadID).FirstOrDefault();
+                aList.Add(
+                    new Except
+                    {
+                        CustomerID = a
+                    ,
+                        LeadID = b
+                    }
+                    );
+
+            }
+
+            }
+            int?[] li =  db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.CustomerID).ToArray();
+            int?[] lii = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.LeadID).ToArray();
+            int cli = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.LeadID).Count();
+            for (int i = 0; i < cli; i++)
+            {
+                bList.Add(
+                new Except
+                {
+                    CustomerID = li[i]
+                ,
+                    LeadID = lii[i]
+                }
+                );
+            }
+          
+            var ab = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => new Except {  CustomerID = c.CustomerID,LeadID= c.LeadID }).ToList();
+            var deleteContact = bList.Except(aList);
+            if (deleteContact != null)
+            {
+
+
+                foreach (var item in deleteContact)
+                {
+                    db.LeadContactTables.RemoveRange(db.LeadContactTables.Where(x => x.LeadID == item.LeadID && x.CustomerID == item.CustomerID));
                     db.SaveChanges();
 
                 }
-               
-
             }
-            //Adds values
 
-            //add customer contact table 
-            int id = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
-            if (cc_id !=null)
+
+
+            if (CustomerId != null)
             {
 
-
-                for (int ii = 0; ii < Contact.Length; ii++)
+            
+            for (int i = 0; i < CustomerId.Length; i++)
+            {
+                List<int> ccd = new List<int>();
+                if (cc_id != null)
                 {
-                    int nameid = Contact[ii];
 
-                    for (int i = 0; i < cc_id.Length; i++)
+
+
+                    for (int ii = 0; ii < cc_id.Length; ii++)
                     {
-                        int ccid = cc_id[i];
-                        int? cc = db.CustomerContacts.Where(c => c.CustomerId == nameid && c.ContactId == ccid).Select(c =>
-                             c.ContactId
-                               ).FirstOrDefault();
-                        if (cc != null)
-                        {
-                            db.LeadContactTables.Add(new LeadContactTable
-                            {
 
-                                CustomerID = nameid,
-                                LeadID = id,
-                                ccID = cc
-                            });
-
-
-                        }
-
+                        ccd.Add(Convert.ToInt32(cc_id[ii].Split(',')[0]));
 
                     }
                 }
-            }
+                int id = CustomerId[i];
+                var CustomerIDs = db.Customers.Where(lc => lc.Id == id).Select(lcr => new { CustomerID = lcr.Id });
+                var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
 
-            db.SaveChanges();
+                var CustomersSelected = db.LeadContactTables.Where(c => c.CustomerID == id).Select(c => c.CustomerID).Distinct().ToArray();
+                //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
 
+                ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName", CustomersSelected);
+                    hc.AddNewContact(ContactL.ToArray(), cc_id);
+                    // hc.AddContacts(Contact, ccd.ToArray(), cc_id, lead, CustomerId);
 
-            if (ModelState.IsValid)
-            {
+                }
+        }
+          
+
+            //if (ModelState.IsValid)
+            //{
                 db.Entry(lead).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
-            }
+          //  }
             // ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", lead.CustomerId);
 
 
@@ -776,7 +744,7 @@ namespace TOProjects.Controllers
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", lead.ProjectId);
             return View(lead);
         }
-
+        
         // GET: Leads/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -797,8 +765,9 @@ namespace TOProjects.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Lead lead = db.Leads.Find(id);
-            db.Leads.Remove(lead);
+            var allCustomersForThisLeadId = from c in db.Leads where c.Id == id select c;
+            db.Leads.RemoveRange(allCustomersForThisLeadId);
+          
             try
             {
                 db.SaveChanges();
