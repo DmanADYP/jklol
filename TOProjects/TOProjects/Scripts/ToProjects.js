@@ -35,6 +35,9 @@ $(document).ready(function () {
          
 
           var newCustomerName = $('#NewCustomerLead').val();
+          var NewProject = $("#NewProject").val();
+          var Address = $("#Address").val();
+          var Quantity = $("#Quantity").val();
 
           $.ajax({
               url: "/Leads/LeadNewCustomer",
@@ -68,6 +71,7 @@ $(document).ready(function () {
                  $('#NewCustomerLead').text('');
                  $('#NewCustomerLead').val('New Customer Name ...');
                  $('#NewCustomerLead').attr('class', 'text-label');
+                
 
 
                 
@@ -104,22 +108,9 @@ $(document).ready(function () {
 
                  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  
+                 $("#NewProject").val(NewProject);
+                 $("#Address").val(Address);
+                 $("#Quantity").val(Quantity);
 
 
               }});

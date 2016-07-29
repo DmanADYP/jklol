@@ -444,7 +444,7 @@ namespace TOProjects.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Lead lead, int[] Contact, string[] cc_id, string[] NameContact
                  //,[Bind(Include = "Id,LeadSourceId,EmployeeId,ProjectId,LeadTypeId,LeadStatusId,CreatedDate,Address,SendCreditApp,CustomerInsInfo,BidDueDate,BidOpeningDate,FollowUpDate,Quantity,Name")] Lead lead
-                 , string NewProject, string CreateCustomProjectCheckBox, string NewCustomerLeadCheckBox, string NewCustomerLead, List<LeadContact> leadContactList, int[] CustomerId)
+                 , string NewProject, string CreateCustomProjectCheckBox, string NewCustomerLeadCheckBox, string NewCustomerLead, List<LeadContact> leadContactList, string[] CustomerId)
         {
             var ContactL = new List<int>();
             if (Contact !=null)
@@ -513,6 +513,7 @@ namespace TOProjects.Controllers
                     lc.LeadId = AfterLead.Id;
                     lc.CustomerId = AfterCustomer.Id;
                     db.LeadCustomers.Add(lc);
+                db.SaveChanges();
 
 
 
@@ -521,18 +522,21 @@ namespace TOProjects.Controllers
                 if (CustomerId != null)
                 {
                     //Create entries for all customers chosen on the lead create screen
-                    foreach (int theInt in CustomerId)
+                    foreach (string theInt in CustomerId)
                     {
+                        var CustID = db.Customers.Where(c => c.Name == theInt).Select(c => c.Id).FirstOrDefault();
                         LeadCustomer lcd = new LeadCustomer();
                         lcd.LeadId = AfterLead.Id;
-                        lcd.CustomerId = theInt;
+                        lcd.CustomerId = CustID;
                         db.LeadCustomers.Add(lcd);
+                        db.SaveChanges();
                     }
                 }
 
-                db.SaveChanges();
+             
 
                 hc.AddNewContact(ContactL.ToArray(), cc_id);
+               // db.SaveChanges();
 
                 //hc.AddContacts(Contact, cc_id, lead, CustomerId);
 
