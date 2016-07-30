@@ -495,9 +495,9 @@ namespace TOProjects.Controllers
                
                 //We create the new lead
                 Lead AfterLead = db.Leads.Add(lead);
-
-                //If New Customer Fill In Was Done then: 1. Create New Customer. 2. Create New Lead Customer (With Customer ID and Lead)
-                if (!string.IsNullOrEmpty(NewCustomerLeadCheckBox) && NewCustomerLeadCheckBox == "Show")
+             db.SaveChanges();
+            //If New Customer Fill In Was Done then: 1. Create New Customer. 2. Create New Lead Customer (With Customer ID and Lead)
+            if (!string.IsNullOrEmpty(NewCustomerLeadCheckBox) && NewCustomerLeadCheckBox == "Show")
                 {
 
                     //New Fill in customer
@@ -525,24 +525,31 @@ namespace TOProjects.Controllers
                     foreach (string theInt in CustomerId)
                     {
                         var CustID = db.Customers.Where(c => c.Name == theInt).Select(c => c.Id).FirstOrDefault();
-                        LeadCustomer lcd = new LeadCustomer();
-                        lcd.LeadId = AfterLead.Id;
-                        lcd.CustomerId = CustID;
-                        db.LeadCustomers.Add(lcd);
-                        db.SaveChanges();
+                        if (CustID!=0)
+                        {
+                            LeadCustomer lcd = new LeadCustomer();
+                            lcd.LeadId = AfterLead.Id;
+                            lcd.CustomerId = CustID;
+                            db.LeadCustomers.Add(lcd);
+                            db.SaveChanges();
+
+                        }
+                        
                     }
                 }
 
-             
 
+            
                 hc.AddNewContact(ContactL.ToArray(), cc_id);
-               // db.SaveChanges();
+                db.SaveChanges();
 
                 //hc.AddContacts(Contact, cc_id, lead, CustomerId);
 
                 return RedirectToAction("Index");
             }
-
+           
+            hc.AddNewContact(ContactL.ToArray(), cc_id);
+            db.SaveChanges();
 
             // ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", lead.CustomerId);
             ViewBag.EmployeeId = new SelectList(db.Employees, "Id", "FirstName", lead.EmployeeId);
@@ -552,7 +559,7 @@ namespace TOProjects.Controllers
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", lead.ProjectId);
 
             return RedirectToAction("Index");
-            return View(lead);
+            //return View(lead);
         }
 
        
