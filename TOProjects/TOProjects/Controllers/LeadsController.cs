@@ -357,7 +357,7 @@ namespace TOProjects.Controllers
             var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
             var CustomersSelected = Customers.Where(z => CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c => c.CustomerID).ToArray();
 
-
+            Array.Sort(CustomersSelected);
 
 
 
@@ -582,8 +582,13 @@ namespace TOProjects.Controllers
             var CustomerIDs = db.Customers.Where(lc => lc.Id == id).Select(lcr => new { CustomerID = lcr.Id });
             var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
 
+
+           
+
+
             var CustomersSelected = db.LeadContactTables.Where(c => c.LeadID == id).Select(c => c.CustomerID).Distinct().ToArray();
-            //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
+            
+
 
             ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName",CustomersSelected);
 
@@ -725,9 +730,9 @@ namespace TOProjects.Controllers
                 var Customers = db.Customers.Select(c => new { CustomerID = c.Id, CustomerName = c.Name }).ToList();
 
                 var CustomersSelected = db.LeadContactTables.Where(c => c.CustomerID == id).Select(c => c.CustomerID).Distinct().ToArray();
-                //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
-
-                ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName", CustomersSelected);
+                    //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
+                    Array.Sort(CustomersSelected);
+                    ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName", CustomersSelected);
                     hc.AddNewContact(ContactL.ToArray(), cc_id);
                     // hc.AddContacts(Contact, ccd.ToArray(), cc_id, lead, CustomerId);
 
