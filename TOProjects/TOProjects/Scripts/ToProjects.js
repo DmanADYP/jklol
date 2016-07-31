@@ -14,12 +14,13 @@ function getParameterByName(name) {
 $(window).load(function () {
 
     $('.search-choice-close').click(function (e) {
-       
-        $(this.parentElement.childNodes).each(function () {
-            //alert(('#' + currentCustomerID));
-            //$('#' + currentCustomerID).remove();
-            $('#' + this.innerText).remove();
-
+        e.stopPropagation();
+        var count = 0;
+        $(this.parentElement.childNodes).each(function (i) {
+            count++
+            if (count == 1) {
+                $('#' + this.innerText).remove();
+            }
         });
 
     });
@@ -255,12 +256,16 @@ $(document).ready(function () {
         //Pass this result into AJAX if add (not what is currently passed).  If remove then no ajax and just jquery to remove div).
         
         $('.search-choice-close').click(function (e) {
-            
-          
-             $(this.parentElement.childNodes).each(function () {
-            //alert(('#' + currentCustomerID));
-            //$('#' + currentCustomerID).remove();
-                $('#' + this.innerText).remove();
+            e.stopPropagation();
+            var count = 0;
+             $(this.parentElement.childNodes).each(function (i) {
+
+                 count++;
+                 if (count ==1) {
+                     $('#' + this.innerText).remove();
+                 }
+               
+               
              
             });
            
@@ -271,16 +276,50 @@ $(document).ready(function () {
         if ($('#' + currentCustomerID).length) {
            
         } else {
-
-            $.ajax({
-                url: "/Leads/ShowContacts",
-                type: "POST",
-                dataType: "json",
-                data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                success: function (data) {
-                    $("#ContactZone").append(data);
-                }
-            });
+            var NewTable = currentCustomerID;
+            var shorted = [];
+            shorted.push(NewTable);
+            var sv = clientName.sort(function(a,b){
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            }).slice();
+            var valueInAray = jQuery.inArray(NewTable, sv);
+            if (clientName.length ==1) {
+                //just append
+                $.ajax({
+                    url: "/Leads/ShowContacts",
+                    type: "POST",
+                    dataType: "json",
+                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                    success: function (data) {
+                        $("#ContactZone").after(data);
+                    }
+                });
+            }else
+            if (sv[valueInAray+1] ==undefined) {
+                //apend last value array
+                $.ajax({
+                    url: "/Leads/ShowContacts",
+                    type: "POST",
+                    dataType: "json",
+                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                    success: function (data) {
+                        $("#" + sv[sv.length - 2]).after(data);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: "/Leads/ShowContacts",
+                    type: "POST",
+                    dataType: "json",
+                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                    success: function (data) {
+                        $("#" + sv[valueInAray+1]).before(data);
+                    }
+                });
+               
+            }
+           var appendBeforVal= sv[valueInAray];
+            
         }
 
         

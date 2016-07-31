@@ -263,7 +263,7 @@ namespace TOProjects
                 {
                     result += "<table class='table'><tr><th><h3>";
                     result += "<Input type='checkbox' style='display:none' name='NameContact' value='" + theCustomerID + "'checked>";
-                    result += theCustomerID + " </h3></th></tr><tr><th scope ='row'> No associated contacts </th></tr></table>";
+                    result += theCustomerID + " </h3></th></tr><tr><th scope ='row'> No associated contacts </th></tr></table></div>";
 
                 }
                 else
