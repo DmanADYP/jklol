@@ -282,7 +282,7 @@ namespace TOProjects
                         result += item.Name + " </h3></th></tr>";
                         result += @"
   <tr>
- <th scope='row'> First Name </th>
+ <th scope='row'>  </th>
     <th> First Name </th>
     <th> Last Name </th>
     <th> Email </th>
