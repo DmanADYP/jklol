@@ -358,58 +358,28 @@ namespace TOProjects.Controllers
             var CustomersSelected = Customers.Where(z => CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c => c.CustomerID).ToArray();
 
             Array.Sort(CustomersSelected);
-
-
-
-
-
-            var tm =
-                          (from f in db.v_lead_contact
-                           join me in db.LeadContactTables on f.LeadID equals me.LeadID
-                           select
-                          new
-                          {
-                              FirstName = f.FirstName
-         ,
-                              Email = f.Email
-         ,
-                              LastName = f.LastName
-         ,
-                              MobilePhone = f.MobilePhone
-         ,
-                              WorkPhone = f.WorkPhone
-         ,
-                              Title = f.Title
-         ,
-                              Notes = f.Notes
-         ,
-                              Name = f.Name
-                         ,
-                              Id = f.Id
-                          }).Where(c => c.Id == id).ToList();
-            var ltm = new List<v_lead_contact>();
-            foreach (var item in tm)
+            var customerSelectedName = (from lc in db.LeadContactTables
+                                        join c in db.Customers on lc.CustomerID equals c.Id
+                                        where lc.LeadID == id
+                                        select c.Name).Distinct();
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in customerSelectedName)
             {
-                 ltm = new List<v_lead_contact>()
+                int iid = Convert.ToInt32(id);
+                if (item == null)
                 {
-                    new v_lead_contact
-                    {
-                        FirstName = item.FirstName,
-                        Email = item.Email,
-                        LastName = item.LastName,
-                        MobilePhone = item.MobilePhone,
-                        WorkPhone = item.WorkPhone,
-                        Title = item.Title,
-                        Notes = item.Notes,
-                        Name = item.Name,
-                        Id = item.Id
-                        
-                    
-                    }
-                };
+                    sb.Append(hc.GenerateContact("true", "", iid, "Details"));
+                }
+                else
+                {
+                    sb.Append(hc.GenerateContact("true", item.ToString(), iid, "Details"));
+                }
+
             }
 
-            tvm.lvc = ltm;
+            ViewBag.Results = sb.ToString();
+
+
 
             return View(tvm);
         }

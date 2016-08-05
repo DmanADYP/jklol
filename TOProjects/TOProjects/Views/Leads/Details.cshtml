@@ -94,41 +94,62 @@
            Customer(s)
         </dt>
 
-       <dd style="margin-left:20px;"> 
-           @* @Html.DisplayFor(model => model.Customer.Name) *@
-           <br />
-          @*add back to query contacts*@
-    @*@foreach (var item in Model.lvc)
+        <dd style="margin-left:20px;">
+            @* @Html.DisplayFor(model => model.Customer.Name) *@
+            <br />
+            @*add back to query contacts*@
+         @Html.Raw(ViewBag.Results)
+         @*   @foreach (var item in ViewBag.Results)
     {
-        
-        <table>
-            <tr>
-                <th> First Name: </th>
-                <td>@item.FirstName</td>
-            </tr>
-            <tr>
-                <th> Last Name </th>
-                <th> Email </th>
-                <th> Work Phone </th>
-                <th> Mobile Phone </th>
-                <th> Title </th>
-                <th> Notes </th>
-            </tr>
+      <table class='table'>
+            <tbody>
+                <tr scope='row'>
+                    <td>Customer</td>
+                    <td>@item.Name</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>First Name </td>
+                    <td>@item.FirstName</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Last Name</td>
+                    <td>@item.LastName</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Email</td>
+                    <td>@item.Email</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Mobile Phone</td>
+                    <td>@item.MobilePhone</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Work Phone</td>
+                    <td>@item.WorkPhone</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Title</td>
+                    <td>@item.Title</td>
+                </tr>
+                <tr scope='row'>
+                    <td>&nbsp;</td>
+                    <td>Notes</td>
+                    <td>@item.Notes</td>
+                </tr>
+            </tbody>
+        </table>}*@
 
-            <tr>
-                <td></td>
-                <td>@item.LastName</td>
-                <td>@item.Email</td>
-                <td>@item.WorkPhone</td>
-                <td>@item.Title</td>
-                <td>@item.Notes</td>
-            </tr>
-        </table>
-    }*@
-              @*     @Html.ListBox("CustomerId", (MultiSelectList)ViewBag.Customers, htmlAttributes: new { @style="width:300px;", @disabled = "disabled", @class = "form-control chosenSelect" })*@
-                   @*@@Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
-               
-           <br />
+            @*     @Html.ListBox("CustomerId", (MultiSelectList)ViewBag.Customers, htmlAttributes: new { @style="width:300px;", @disabled = "disabled", @class = "form-control chosenSelect" })*@
+            @*@@Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })*@
+
+            <br />
         </dd>
 
         <dt>
