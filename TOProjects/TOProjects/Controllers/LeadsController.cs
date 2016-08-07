@@ -510,7 +510,7 @@ namespace TOProjects.Controllers
 
 
             
-                hc.AddNewContact(ContactL.ToArray(), cc_id);
+                hc.AddNewContact(ContactL.ToArray(), cc_id,"Create");
                 db.SaveChanges();
 
                 //hc.AddContacts(Contact, cc_id, lead, CustomerId);
@@ -518,7 +518,7 @@ namespace TOProjects.Controllers
                 return RedirectToAction("Index");
             }
            
-            hc.AddNewContact(ContactL.ToArray(), cc_id);
+            hc.AddNewContact(ContactL.ToArray(), cc_id, "Create");
             db.SaveChanges();
 
             // ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", lead.CustomerId);
@@ -614,8 +614,8 @@ namespace TOProjects.Controllers
             {
                 ContactL = new List<int>();
             }
-
-            int iid = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
+            int CustomerIdd = CustomerId[0];
+           // int iid = (db.Leads.Where(c => c.Id == CustomerIdd).OrderByDescending(c => c.Id).Select(c => c.Id).FirstOrDefault());
             List<Except> aList = new List<Except>();
             List<Except> bList = new List<Except>();
             if (NameContact != null)
@@ -631,8 +631,8 @@ namespace TOProjects.Controllers
 
             foreach (var item in ContactL)
             {
-                int? a = db.LeadContactTables.Where(c => c.LeadID == iid && c.CustomerID == item).Select(c => c.CustomerID).FirstOrDefault();
-                int? b = db.LeadContactTables.Where(c => c.LeadID == iid && c.CustomerID == item).Select(c => c.LeadID).FirstOrDefault();
+                int? a = db.LeadContactTables.Where(c => c.LeadID == lead.Id && c.CustomerID == item).Select(c => c.CustomerID).FirstOrDefault();
+                int? b = db.LeadContactTables.Where(c => c.LeadID == lead.Id && c.CustomerID == item).Select(c => c.LeadID).FirstOrDefault();
                 aList.Add(
                     new Except
                     {
@@ -645,9 +645,9 @@ namespace TOProjects.Controllers
             }
 
             }
-            int?[] li =  db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.CustomerID).ToArray();
-            int?[] lii = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.LeadID).ToArray();
-            int cli = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => c.LeadID).Count();
+            int?[] li =  db.LeadContactTables.Where(c => c.LeadID == lead.Id).Select(c => c.CustomerID).ToArray();
+            int?[] lii = db.LeadContactTables.Where(c => c.LeadID == lead.Id).Select(c => c.LeadID).ToArray();
+            int cli = db.LeadContactTables.Where(c => c.LeadID == lead.Id).Select(c => c.LeadID).Count();
             for (int i = 0; i < cli; i++)
             {
                 bList.Add(
@@ -660,7 +660,7 @@ namespace TOProjects.Controllers
                 );
             }
           
-            var ab = db.LeadContactTables.Where(c => c.LeadID == iid).Select(c => new Except {  CustomerID = c.CustomerID,LeadID= c.LeadID }).ToList();
+            var ab = db.LeadContactTables.Where(c => c.LeadID == lead.Id).Select(c => new Except {  CustomerID = c.CustomerID,LeadID= c.LeadID }).ToList();
             var deleteContact = bList.Except(aList);
             if (deleteContact != null)
             {
@@ -703,7 +703,7 @@ namespace TOProjects.Controllers
                     //db.v_lead_contact.Where(z=> CustomerIDs.Any(a => a.CustomerID == z.CustomerID)).Select(c =>  c.CustomerID).ToArray();
                     Array.Sort(CustomersSelected);
                     ViewBag.Customers = new MultiSelectList(Customers, "CustomerID", "CustomerName", CustomersSelected);
-                    hc.AddNewContact(ContactL.ToArray(), cc_id);
+                    hc.AddNewContact(ContactL.ToArray(), cc_id,lead.Id.ToString());
                     // hc.AddContacts(Contact, ccd.ToArray(), cc_id, lead, CustomerId);
 
                 }

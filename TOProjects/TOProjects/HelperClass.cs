@@ -10,9 +10,18 @@ namespace TOProjects
     {
         List<string> CustName = new List<string>();
         private ProjectsEntities db = new ProjectsEntities();
-        public void AddNewContact(int[] Contact, string[] cc_id)
+        public void AddNewContact(int[] Contact, string[] cc_id,string Action)
         {
-            int iid = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
+            int iid;
+            if (Action == "Create")
+            {
+                 iid = (db.Leads.OrderByDescending(c => c.Id).Select(c => c.Id).First());
+            }
+            else
+            {
+                 iid = Convert.ToInt32(Action);
+            }
+            
             List<Except> aList = new List<Except>();
             List<Except> bList = new List<Except>();
             if (Contact != null)
