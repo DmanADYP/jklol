@@ -26,7 +26,7 @@
                @* <option value="CustomerInsInfo">Customer Insurance Information</option>*@
                 <option value="Employee">Employee</option>
                 <option value="FollowUp">Follow Up</option>
-                <option value="Name">Name</option>
+               @* <option value="Name">Name</option>*@
                 <option value="Project">Project</option>
                 <option value="Quantity">Quantity</option>
                @* <option value="SendCreditApp">Send Credit Application</option>*@
@@ -56,10 +56,10 @@
                 @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.LeadStatusSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
             </th>
 
-            <th>
+            @*<th>
 
                 @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, searchStringValue = ViewBag.searchStringValue, searchStringValue2 = ViewBag.searchStringValue2, LeadField = ViewBag.LeadField })
-            </th>
+            </th>*@
 
             <th>
 
@@ -136,9 +136,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.LeadStatu.Name)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Name)
-                </td>
+                </td>*@
 
 
                 <td>
