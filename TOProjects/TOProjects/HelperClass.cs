@@ -191,7 +191,7 @@ namespace TOProjects
 
         public string GenerateContact(string addItem, string theCustomerID, int LeadID,string AllChecked)
         {
-            
+           
             string result = "";
 
             if (addItem == "true" )
@@ -205,6 +205,7 @@ namespace TOProjects
                 (from cc in db.CustomerContacts
                  join c in db.Contacts on cc.ContactId equals c.Id
                  join cm in db.Customers on cc.CustomerId equals cm.Id
+                 join lct in db.LeadContactTables on cc.CustomerId equals lct.CustomerID
                  select new
                  {
                      FirstName = c.FirstName
@@ -226,7 +227,9 @@ namespace TOProjects
                      CustomerID = cc.CustomerId
                      ,
                      ContactID = cc.ContactId
-                 }).Where(p => p.Name == theCustomerID && p.CustomerID != null).DefaultIfEmpty(); //produces flat sequence
+                     ,leadid = lct.LeadID
+                     
+                 }).Distinct().Where(p => p.Name == theCustomerID && p.CustomerID != null && p.leadid == LeadID).DefaultIfEmpty(); //produces flat sequence
 
                 var count = (from cc in db.CustomerContacts
                             join c in db.Contacts on cc.ContactId equals c.Id
@@ -242,10 +245,29 @@ namespace TOProjects
                 int i = 0;
                 if (count == 0)
                 {
-                    result += "<table class='table'><tr><th><h3>";
-                    result += "<Input type='checkbox' style='display:none' name='NameContact' value='" + theCustomerID + "'checked>";
-                    result += theCustomerID + " </h3></th></tr><tr><th scope ='row'> No associated contacts </th></tr></table></div>";
-
+                    if (AllChecked == "Details")
+                    {
+                        result += "<table class='table' >";
+                        result += "<tbody>";
+                        result += "<tr scope='row' >";
+                        result += "<td><b>Customer</b></td>";
+                        result += "<td><b>" + theCustomerID + "</b></td>";
+                        result += "<td>&nbsp;</td>";
+                        result += "</tr>";
+                        result += "<tr scope='row'>";
+                        result += "<td>&nbsp;</td>";
+                        result += "<td>&nbsp;</td>";
+                        result += "<td>No associated contacts</td>";
+                        result += "</tr>";
+                        result += "</tbody>";
+                        result += "</table>";
+                    }
+                    else
+                    {
+                        result += "<table class='table'><tr><th><h3>";
+                        result += "<Input type='checkbox' style='display:none' name='NameContact' value='" + theCustomerID + "'checked>";
+                        result += theCustomerID + " </h3></th></tr><tr><th scope ='row'> No associated contacts </th></tr></table></div>";
+                    }
                 }
                 else
                 {
@@ -323,7 +345,7 @@ namespace TOProjects
                                         if (!CustName.Contains(item.Name))
                                         {
 
-
+                                            
                                             CustName.Add(item.Name);
 
                                             result += "<table class='table' >";
@@ -336,7 +358,7 @@ namespace TOProjects
                                         }
 
                                         CustName.Add(item.Name);
-
+                                       
                                         result += "<tr scope='row' " + Display + ">";
                                         result += "<td><b>Contacts</b></td>";
                                         result += "<td>First Name </td>";
@@ -372,15 +394,32 @@ namespace TOProjects
                                         result += "<td>Notes</td>";
                                         result += "<td>" + inner.Notes + "</td>";
                                         result += "</tr>";
-                                        result += "<tbody>";
+                                        result += "</tbody>";
                                     }
                                     else
                                     {
-                                        int dblcheck = CustomerJoin.Where(c => c.Name == item.Name).Distinct().Count();
-                                        if (dblcheck !=2)
+                                        var dblcheck =
+                                              (from cc in db.CustomerContacts
+                                               join c in db.Contacts on cc.ContactId equals c.Id
+                                               join cm in db.Customers on cc.CustomerId equals cm.Id
+                                               join lct in db.LeadContactTables on cc.CustomerId equals lct.CustomerID
+                                               select new
+                                               {
+
+                                                   Name = cm.Name
+                                               ,
+
+                                                   ccid = lct.ccID
+                                                   ,leadID = lct.LeadID
+                                               }).Where(p => p.Name == theCustomerID && p.leadID ==LeadID ).Distinct().ToList();
+
+                                        var x = result.Contains(@"Customer</b></td><td><b>"+item.Name);
+                                       int dbl = CustomerJoin.Where(c => c.Name == item.Name && c.ContactID != null).Distinct().Count();
+                                        if (!x || dbl != 2)
                                         {
-                                           
-                                            result += "<table class='table' >";
+                                            
+
+                                               result += "<table class='table' >";
                                             result += "<tbody>";
                                             result += "<tr scope='row' >";
                                             result += "<td><b>Customer</b></td>";
@@ -392,7 +431,8 @@ namespace TOProjects
                                             result += "<td>&nbsp;</td>";
                                             result += "<td>No Contacts Checked</td>";
                                             result += "</tr>";
-                                            result += "<tbody>";
+                                            result += "</tbody>";
+                                            result += "</table>";
                                         }
 
                                     }

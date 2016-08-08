@@ -372,7 +372,11 @@ namespace TOProjects.Controllers
                 }
                 else
                 {
-                    sb.Append(hc.GenerateContact("true", item.ToString(), iid, "Details"));
+                   
+                    
+                        sb.Append(hc.GenerateContact("true", item.ToString(), iid, "Details"));
+                    
+                 
                 }
 
             }
