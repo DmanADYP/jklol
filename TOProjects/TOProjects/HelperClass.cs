@@ -205,7 +205,7 @@ namespace TOProjects
                 (from cc in db.CustomerContacts
                  join c in db.Contacts on cc.ContactId equals c.Id
                  join cm in db.Customers on cc.CustomerId equals cm.Id
-                 join lct in db.LeadContactTables on cc.CustomerId equals lct.CustomerID
+                
                  select new
                  {
                      FirstName = c.FirstName
@@ -227,9 +227,9 @@ namespace TOProjects
                      CustomerID = cc.CustomerId
                      ,
                      ContactID = cc.ContactId
-                     ,leadid = lct.LeadID
+                   //  ,leadid = lct.LeadID
                      
-                 }).Distinct().Where(p => p.Name == theCustomerID && p.CustomerID != null && p.leadid == LeadID).DefaultIfEmpty(); //produces flat sequence
+                 }).Distinct().Where(p => p.Name == theCustomerID && p.CustomerID != null /*&& p.leadid == LeadID*/).DefaultIfEmpty(); //produces flat sequence
 
                 var count = (from cc in db.CustomerContacts
                             join c in db.Contacts on cc.ContactId equals c.Id
@@ -418,7 +418,7 @@ namespace TOProjects
 
                                         var x = result.Contains(@"Customer</b></td><td><b>"+item.Name);
                                        int dbl = CustomerJoin.Where(c => c.Name == item.Name && c.ContactID != null).Distinct().Count();
-                                        if ( checker<dbl-checker )
+                                        if (!x && checker<dbl-checker )
                                         {
                                             
 
