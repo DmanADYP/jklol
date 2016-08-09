@@ -319,7 +319,9 @@ namespace TOProjects
                                 }
                                 else
                                 {
-                                    check = db.LeadContactTables.Where(c => c.ccID == inner.ContactID && c.CustomerID == item.CustomerID && c.LeadID == LeadID).Select(c => c.ccID).FirstOrDefault();
+                                    check = db.LeadContactTables.Where(c => c.ccID == inner.ContactID && c.CustomerID == item.CustomerID && c.LeadID == LeadID).OrderByDescending(c=> c.ccID).Select(c => c.ccID).FirstOrDefault();
+                                    
+
                                 }
 
                                 if (check != null || AllChecked == "Create")
@@ -398,6 +400,7 @@ namespace TOProjects
                                     }
                                     else
                                     {
+                                       int checker = db.LeadContactTables.Where(c => c.CustomerID == item.CustomerID && c.LeadID == LeadID && c.ccID !=null ).OrderByDescending(c => c.ccID).Select(c => c.ccID).Distinct().Count();
                                         var dblcheck =
                                               (from cc in db.CustomerContacts
                                                join c in db.Contacts on cc.ContactId equals c.Id
@@ -415,7 +418,7 @@ namespace TOProjects
 
                                         var x = result.Contains(@"Customer</b></td><td><b>"+item.Name);
                                        int dbl = CustomerJoin.Where(c => c.Name == item.Name && c.ContactID != null).Distinct().Count();
-                                        if (!x || dbl != 2)
+                                        if ( checker<dbl-checker )
                                         {
                                             
 
