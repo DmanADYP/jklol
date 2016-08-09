@@ -618,7 +618,13 @@ namespace TOProjects.Controllers
             {
                 ContactL = new List<int>();
             }
-            int CustomerIdd = CustomerId[0];
+            if (CustomerId !=null)
+            {
+                int CustomerIdd = CustomerId[0];
+            }
+                
+            
+           
            // int iid = (db.Leads.Where(c => c.Id == CustomerIdd).OrderByDescending(c => c.Id).Select(c => c.Id).FirstOrDefault());
             List<Except> aList = new List<Except>();
             List<Except> bList = new List<Except>();
