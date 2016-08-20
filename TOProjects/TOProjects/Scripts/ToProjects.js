@@ -19,7 +19,7 @@ $(window).load(function () {
         $(this.parentElement.childNodes).each(function (i) {
             count++
             if (count == 1) {
-                $('#' + this.innerText).remove();
+                $('#' + this.innerText.replace(/ /g, 'Space')).remove();
             }
         });
 
@@ -243,13 +243,13 @@ $(document).ready(function () {
             });
                 
             //currentCustomerID = $(this).val()[0];
-                currentCustomerID = clientName[clientName.length - 1];
+                currentCustomerID = clientName[clientName.length - 1].replace(/ /g, 'Space');
             $(this).each( function (i, l) {
               //  alert(this.val());
             });
         } catch (e) {
            // currentCustomerID = $(this).val();
-            currentCustomerID = clientName[clientName.length - 1];
+            currentCustomerID = clientName[clientName.length - 1].replace(/ /g, 'Space');
         }
       
         //COMPARE: selectedCustomers vs. previousCustomers.  If selected contains new add it.  If selected has one less remove it.
@@ -262,7 +262,7 @@ $(document).ready(function () {
 
                  count++;
                  if (count ==1) {
-                     $('#' + this.innerText).remove();
+                     $('#' + this.innerText.replace(/ /g, 'Space')).remove();
                  }
                
                
@@ -283,7 +283,7 @@ $(document).ready(function () {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             }).slice();
             var valueInAray = jQuery.inArray(NewTable, sv);
-            if (clientName.length >=1) {
+            if (clientName.length ==1) {
                 //just append
                 $.ajax({
                     url: "/Leads/ShowContacts",
@@ -313,7 +313,8 @@ $(document).ready(function () {
                     dataType: "json",
                     data: { addItem: yesORno, theCustomerID: currentCustomerID },
                     success: function (data) {
-                        $("#" + sv[valueInAray+1]).before(data);
+                        // $("#" + sv[valueInAray+1]).before(data);
+                        $("#ContactZone").after(data);
                     }
                 });
                

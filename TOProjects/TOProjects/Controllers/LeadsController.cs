@@ -25,7 +25,7 @@ namespace TOProjects.Controllers
         {
             
             //customer ID is coming into here
-            string result = hc.GenerateContact(addItem, theCustomerID, 0,"Create");
+            string result = hc.GenerateContact(addItem, theCustomerID.Replace("Space"," "), 0,"Create");
             return Json(result, JsonRequestBehavior.AllowGet);
             //            return Json("", JsonRequestBehavior.AllowGet);
         }

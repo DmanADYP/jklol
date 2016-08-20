@@ -196,7 +196,7 @@ namespace TOProjects
 
             if (addItem == "true" )
             {
-                result += "<div id='" + theCustomerID + "'>";
+                result += "<div id='" + theCustomerID.Replace(" ", "Space") + "'>";
 
             
 
