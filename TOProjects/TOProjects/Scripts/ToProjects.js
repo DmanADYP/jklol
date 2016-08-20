@@ -276,7 +276,7 @@ $(document).ready(function () {
         if ($('#' + currentCustomerID).length) {
            
         } else {
-            var NewTable = currentCustomerID;
+            var NewTable = currentCustomerID.replace(/Space/g, '');
             var shorted = [];
             shorted.push(NewTable);
             var sv = clientName.sort(function(a,b){
@@ -306,7 +306,7 @@ $(document).ready(function () {
                         $("#" + sv[sv.length - 2]).after(data);
                     }
                 });
-            } else {
+            } else if (clientName.length >= 1) {
                 $.ajax({
                     url: "/Leads/ShowContacts",
                     type: "POST",
@@ -318,6 +318,17 @@ $(document).ready(function () {
                     }
                 });
                
+            } else {
+                $.ajax({
+                    url: "/Leads/ShowContacts",
+                    type: "POST",
+                    dataType: "json",
+                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                    success: function (data) {
+                         $("#" + sv[valueInAray+1]).before(data);
+                       // $("#ContactZone").after(data);
+                    }
+                });
             }
            var appendBeforVal= sv[valueInAray];
             
