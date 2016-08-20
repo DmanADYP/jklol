@@ -283,7 +283,7 @@ $(document).ready(function () {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             }).slice();
             var valueInAray = jQuery.inArray(NewTable, sv);
-            if (clientName.length ==1) {
+            if (clientName.length >=1) {
                 //just append
                 $.ajax({
                     url: "/Leads/ShowContacts",
