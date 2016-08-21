@@ -276,60 +276,86 @@ $(document).ready(function () {
         if ($('#' + currentCustomerID).length) {
            
         } else {
-            var NewTable = currentCustomerID.replace(/Space/g, '');
-            var shorted = [];
-            shorted.push(NewTable);
-            var sv = clientName.sort(function(a,b){
-                return a.toLowerCase().localeCompare(b.toLowerCase());
-            }).slice();
-            var valueInAray = jQuery.inArray(NewTable, sv);
-            if (clientName.length ==1) {
-                //just append
-                $.ajax({
-                    url: "/Leads/ShowContacts",
-                    type: "POST",
-                    dataType: "json",
-                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                    success: function (data) {
-                        $("#ContactZone").after(data);
-                    }
-                });
-            }else
-            if (sv[valueInAray+1] ==undefined) {
-                //apend last value array
-                $.ajax({
-                    url: "/Leads/ShowContacts",
-                    type: "POST",
-                    dataType: "json",
-                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                    success: function (data) {
-                        $("#" + sv[sv.length - 2]).after(data);
-                    }
-                });
-            } else if (clientName.length >= 1) {
-                $.ajax({
-                    url: "/Leads/ShowContacts",
-                    type: "POST",
-                    dataType: "json",
-                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                    success: function (data) {
-                        // $("#" + sv[valueInAray+1]).before(data);
-                        $("#ContactZone").after(data);
-                    }
-                });
+           
+
+            //if aa>bb then append else affer 
+            //if no values append
+
+
+            $.ajax({
+                        url: "/Leads/ShowContacts",
+                        type: "POST",
+                        dataType: "json",
+                        data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                        success: function (data) {
+                            $("#ContactZone").after(data);
+                        }
+            });
+         
+
+            //$("#ContactZone .sort").sort(function (a, b) {
+            //    return $(a).find("h3").text() > $(b).find("h3").text();
+            //}).each(function () {
+            //    var elem = $(this);
+            //    $("div.sort").remove();
+            //    $(elem).appendTo("#ContactZone");
+            //});
+
+
+            //var NewTable = currentCustomerID;
+            //var shorted = [];
+            //shorted.push(NewTable);
+            //var sv = clientName.sort(function(a,b){
+            //    return a.toLowerCase().localeCompare(b.toLowerCase());
+            //}).slice();
+            //var valueInAray = jQuery.inArray(NewTable, sv);
+            //if (clientName.length ==1) {
+            //    //just append
+            //    $.ajax({
+            //        url: "/Leads/ShowContacts",
+            //        type: "POST",
+            //        dataType: "json",
+            //        data: { addItem: yesORno, theCustomerID: currentCustomerID },
+            //        success: function (data) {
+            //            $("#ContactZone").after(data);
+            //        }
+            //    });
+            //}else
+            //if (sv[valueInAray+1] ==undefined) {
+            //    //apend last value array
+            //    $.ajax({
+            //        url: "/Leads/ShowContacts",
+            //        type: "POST",
+            //        dataType: "json",
+            //        data: { addItem: yesORno, theCustomerID: currentCustomerID },
+            //        success: function (data) {
+            //            $("#" + sv[sv.length - 2]).after(data);
+            //        }
+            //    });
+            //} else if (clientName.length == 1) {
+            //    $.ajax({
+            //        url: "/Leads/ShowContacts",
+            //        type: "POST",
+            //        dataType: "json",
+            //        data: { addItem: yesORno, theCustomerID: currentCustomerID },
+            //        success: function (data) {
+            //            // $("#" + sv[valueInAray+1]).before(data);
+            //            $("#ContactZone").after(data);
+            //        }
+            //    });
                
-            } else {
-                $.ajax({
-                    url: "/Leads/ShowContacts",
-                    type: "POST",
-                    dataType: "json",
-                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                    success: function (data) {
-                         $("#" + sv[valueInAray+1]).before(data);
-                       // $("#ContactZone").after(data);
-                    }
-                });
-            }
+            //} else {
+            //    $.ajax({
+            //        url: "/Leads/ShowContacts",
+            //        type: "POST",
+            //        dataType: "json",
+            //        data: { addItem: yesORno, theCustomerID: currentCustomerID },
+            //        success: function (data) {
+            //            // $("#" + sv[valueInAray+1]).before(data);
+            //           // $("#ContactZone").after(data);
+            //        }
+            //    });
+            //}
            var appendBeforVal= sv[valueInAray];
             
         }
