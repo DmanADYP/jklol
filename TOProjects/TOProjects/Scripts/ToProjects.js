@@ -238,7 +238,7 @@ $(document).ready(function () {
              
            
                 $('.search-choice').each(function () {
-                    clientName.push(this.outerText);
+                    clientName.push(this.outerText.replace(/ /g, 'Space'));
                     //clientName.push(this.value);
             });
                 
@@ -282,15 +282,15 @@ $(document).ready(function () {
             //if no values append
 
 
-            $.ajax({
-                        url: "/Leads/ShowContacts",
-                        type: "POST",
-                        dataType: "json",
-                        data: { addItem: yesORno, theCustomerID: currentCustomerID },
-                        success: function (data) {
-                            $("#ContactZone").after(data);
-                        }
-            });
+            //$.ajax({
+            //            url: "/Leads/ShowContacts",
+            //            type: "POST",
+            //            dataType: "json",
+            //            data: { addItem: yesORno, theCustomerID: currentCustomerID },
+            //            success: function (data) {
+            //                $("#ContactZone").after(data);
+            //            }
+            //});
          
 
             //$("#ContactZone .sort").sort(function (a, b) {
@@ -302,13 +302,36 @@ $(document).ready(function () {
             //});
 
 
-            //var NewTable = currentCustomerID;
-            //var shorted = [];
-            //shorted.push(NewTable);
-            //var sv = clientName.sort(function(a,b){
-            //    return a.toLowerCase().localeCompare(b.toLowerCase());
-            //}).slice();
-            //var valueInAray = jQuery.inArray(NewTable, sv);
+            var NewTable = currentCustomerID;
+            var shorted = [];
+            shorted.push(NewTable);
+            var sv = clientName.sort(function(a,b){
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            }).slice();
+            var valueInAray = jQuery.inArray(NewTable, sv);
+
+            if (valueInAray == 0) {
+                $.ajax({
+                            url: "/Leads/ShowContacts",
+                            type: "POST",
+                            dataType: "json",
+                            data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                            success: function (data) {
+                                $("#ContactZone").after(data);
+                            }
+                        });
+
+            } else {
+                $.ajax({
+                    url: "/Leads/ShowContacts",
+                    type: "POST",
+                    dataType: "json",
+                    data: { addItem: yesORno, theCustomerID: currentCustomerID },
+                    success: function (data) {
+                        $("#" + sv[valueInAray - 1]).after(data);
+                    }
+                });
+            }
             //if (clientName.length ==1) {
             //    //just append
             //    $.ajax({
