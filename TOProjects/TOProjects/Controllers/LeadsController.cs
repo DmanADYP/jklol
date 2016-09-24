@@ -405,7 +405,7 @@ namespace TOProjects.Controllers
           
            // model.StatusList = new SelectList(db.LeadTypes.OrderBy(lt => lt.Name), "Id", "Name");
             ViewBag.LeadTypeId = new SelectList(db.LeadTypes.OrderBy(lt=>lt.Name), "Id", "Name");
-            ViewBag.LeadTypeId = new SelectList(db.LeadStatus.OrderBy(lt => lt.Name), "Id", "Name");
+          //  ViewBag.LeadTypeId = new SelectList(db.LeadStatus.OrderBy(lt => lt.Name), "Id", "Name");
             ViewBag.ProjectId = new SelectList(db.Projects.OrderBy(p=>p.Name), "Id", "Name");
             return View();
         }
