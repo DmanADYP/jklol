@@ -21,25 +21,25 @@
 <table class="table table-striped">
     <tr>
         <th>
-            First Name
+        @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Last Name
+        @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Work Phone
+            @Html.ActionLink("Work Phone", "Index", new { sortOrder = ViewBag.WorkPhoneSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Mobile Phone
+            @Html.ActionLink("Mobile Phone", "Index", new { sortOrder = ViewBag.MobilePhoneSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Email
+            @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Title
+            @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
         <th>
-            Notes
+            @Html.ActionLink("Notes", "Index", new { sortOrder = ViewBag.NotesSortParm, searchStringName = ViewBag.searchStringName, searchStringNumber = ViewBag.searchStringNumber })
         </th>
        
         <th></th>

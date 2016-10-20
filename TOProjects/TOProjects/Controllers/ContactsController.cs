@@ -35,7 +35,7 @@ namespace TOProjects.Controllers
         public ActionResult Index(string sortOrder, string searchString, int? page)
         {
 
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "email_desc" : "";
+            
             var contacts = from c in db.Contacts
                            select c;
 
@@ -43,11 +43,63 @@ namespace TOProjects.Controllers
             {
                 contacts = contacts.Where(c => c.Email.Contains(searchString));
             }
+
+
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "lastname" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "firstname" ? "firstname_desc" : "firstname";
+            ViewBag.LastNameSortParm = sortOrder == "lastname" ? "lastname_desc" : "lastname";
+            ViewBag.WorkPhoneSortParm = sortOrder == "workphone" ? "workphone_desc" : "workphone";
+            ViewBag.MobilePhoneSortParm = sortOrder == "mobilephone" ? "mobilephone_desc" : "mobilephone";
+            ViewBag.EmailSortParm = sortOrder == "email" ? "email_desc" : "email";
+            ViewBag.TitleSortParm = sortOrder == "title" ? "title_desc" : "title";
+            ViewBag.NotesSortParm = sortOrder == "notes" ? "notes_desc" : "notes";
             
+
             switch (sortOrder)
             {
+                case "lastname":
+                    contacts = contacts.OrderBy(c => c.LastName);
+                    break;
+                case "firstname":
+                    contacts = contacts.OrderBy(c => c.FirstName);
+                    break;
+                case "workphone":
+                    contacts = contacts.OrderBy(c => c.WorkPhone);
+                    break;
+                case "mobilephone":
+                    contacts = contacts.OrderBy(c => c.MobilePhone);
+                    break;
+                case "email":
+                    contacts = contacts.OrderBy(c => c.Email);
+                    break;
+                case "title":
+                    contacts = contacts.OrderBy(c => c.Title);
+                    break;
+                case "notes":
+                    contacts = contacts.OrderBy(c => c.Notes);
+                    break;
+                case "lastname_desc":
+                    contacts = contacts.OrderByDescending(c => c.LastName);
+                    break;
+                case "firstname_desc":
+                    contacts = contacts.OrderByDescending(c => c.FirstName);
+                    break;
+
+                case "workphone_desc":
+                    contacts = contacts.OrderByDescending(c => c.WorkPhone);
+                    break;
+                case "mobilephone_desc":
+                    contacts = contacts.OrderByDescending(c => c.MobilePhone);
+                    break;
                 case "email_desc":
                     contacts = contacts.OrderByDescending(c => c.Email);
+                    break;
+                case "title_desc":
+                    contacts = contacts.OrderByDescending(c => c.Title);
+                    break;
+                case "notes_desc":
+                    contacts = contacts.OrderByDescending(c => c.Notes);
                     break;
                 default:
                     contacts = contacts.OrderBy(c => c.Email);
